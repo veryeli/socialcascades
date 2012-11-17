@@ -1,0 +1,54 @@
+# I guess the thing to do is to index the top several thousand subs (readers geq 10?)
+# then for each sub, gather the name of all commentors in the last say month.
+# have a big n by n array of the top however many subs (5k)
+# and a hash of various users (has been indexed)
+
+
+class Graph():
+
+
+
+	def __init__(self, reddit)
+	self.reddit = reddit
+	subs = get_beg_subs()
+	users = set()
+	for each sub in subs:
+		users = users.join(get_users(sub))
+
+	graph=np.array(len(subs), len(subs))
+
+	i = 0
+	for each user in users:
+		user_subs = get_subs(user)
+		fill_in(graph, user_subs)
+		i += 1
+		if i % 100 == 0:
+			
+	def get_all_users(self, sub):
+		users = set()
+		posts = reddit.get('/%s' %(sub))
+		for post in posts:
+			users = users.join(get_participants(post))
+		while reddit.has_next():
+			posts = reddit.get_next()
+			users = users.join(get_participants(post))
+		good_subs = []
+
+	def get_big_subs(self):
+	subs = reddit.get('/reddits')
+	while True:
+		for sub in subs: 
+			if sub.subscribers > 100:
+				self.subs.append(sub)
+		subs = reddit.get_next()
+		for sub in subs with sub.num_users > 1000
+			for user in sub.get_users():
+				users[user.id].append(sub)
+				big_graph[sub]
+
+	def get_users(self, sub):
+		reddit.get
+
+
+
+
