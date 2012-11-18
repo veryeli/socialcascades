@@ -119,6 +119,8 @@ class Web:
 			
 		try:
 			result = handle.read().decode('utf-8')
+		except UnicodeDecodeError:
+			result = ""
 		except IncompleteRead:
 			return ''
 		
