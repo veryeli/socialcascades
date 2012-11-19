@@ -26,12 +26,12 @@ class Graph():
 			# get all the users in each subreddit that we are not yet tracking
 			print '\tFinding new subreddit users...'
 			for sub in self.subs.keys():
-				print '\t\tSubreddit: {0}'.format(sub)
+				print '\t\tSubreddit: {0}'.encode('utf-8').format(sub.encode('utf-8'))
 				new_users |= self.get_new_users(sub)
 			# increment the edge weights based on the new users' subscriptions
 			print '\tUpdating matrix for new users...'
 			for i, user in enumerate(new_users):
-				print '{0}: {1}'.format(i, user)
+				print '{0}: {1}'.encode('utf-8').format(i, user.encode('utf-8'))
 				user_subs = self.get_subs(user)
 				self.fill_in(user_subs)
 				self.indexed_users.add(user)
@@ -67,7 +67,7 @@ class Graph():
 				sleep(2)
 				posts += self.reddit.get_next()
 		for post in posts:
-			print '\t\t\t{0}'.format(post.permalink)
+			print '\t\t\t{0}'.encode('utf-8').format(post.permalink.encode('utf-8'))
 			users |= self.get_participants(post)
 		users = [user for user in users if user not in self.indexed_users]
 		return frozenset(users)
@@ -111,3 +111,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
