@@ -42,7 +42,7 @@ class Graph():
 			print 'Finished scraping iteration. Starting over...'
 	
 	def get_big_subs(self):
-		subs = self.reddit.get('/reddits')
+		subs = self.reddit_get('/reddits')
 		while True:
 			big_sub_found = False
 			for sub in subs:
@@ -57,11 +57,7 @@ class Graph():
 
 	def get_new_users(self, sub):
 		users = set()
-		sleep(2)
-		posts = self.reddit.get('/r/{0}'.format(sub))
-		if posts is None:
-			sleep(3)
-			posts = self.reddit.get('/r/{0}'.format(sub))
+		posts = self.reddit_get('/r/{0}'.format(sub))
 		for i in range(self.pages_per_subreddit):
 			if self.reddit.has_next():
 				sleep(2)
@@ -73,11 +69,7 @@ class Graph():
 		return frozenset(users)
 
 	def get_participants(self, post):
-		sleep(2)
-		posts = self.reddit.get(post.permalink)
-		if posts is None:
-			sleep(3)
-			posts = self.reddit.get(post.permalink)
+		posts = self.reddit_get(post.permalink)
 		post = posts[0]
 		participants = [comment.author for comment in post.comments if comment.author != "[deleted]"]
 		if(post.author != "[deleted]"):
@@ -105,6 +97,16 @@ class Graph():
 		writer = csv.writer(open('adjacencies.csv', 'wb'))
 		for i in range(0,len(self.subs)):
 			writer.writerow(self.graph[i,:])
+
+	def reddit_get(self, url):
+		sleep(2)
+		result = self.reddit.get(url)
+		wait_time = 3
+		while result is None:
+			sleep(wait_time)
+			result = self.reddit.get(url)
+			wait_time = wait_time * 2
+		return result
 
 def main():
 	g = Graph()
