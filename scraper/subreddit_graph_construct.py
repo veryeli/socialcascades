@@ -3,9 +3,9 @@ from ReddiWrap import ReddiWrap
 from time import sleep
 import csv
 
-# I guess the thing to do is to index the top several thousand subs (readers geq 10?)
-# then for each sub, gather the name of all commentors in the last say month.
-# have a big n by n array of the top however many subs (5k)
+# Index the top several thousand subs (readers >= 1000)
+# then for each sub, gather the name of all commentors in the last 5 pages of links.
+# Have a big n by n array of the top however many subs (5k)
 # and a hash of various users (has been indexed)
 class Graph():
 
@@ -13,16 +13,15 @@ class Graph():
 		self.reddit = ReddiWrap(user_agent='made_this_up_quick')
 		self.min_subreddit_size = 1000
 		self.pages_per_subreddit = 5
-		self.indexed_users = set()
+		self.load_users()
 		self.subs = dict()
 		self.get_big_subs()
 		print 'Found {0} subreddits with at least {1} subscribers'.format(len(self.subs), self.min_subreddit_size)
-		self.save_subs()
 		self.graph = np.zeros((len(self.subs), len(self.subs)))
 		self.user_indexes = []
 		while True:
 			print 'Scraping started.'
-			new_users = set()
+			new_users = self.load_new_users()
 			# get all the users in each subreddit that we are not yet tracking
 			print '\tFinding new subreddit users...'
 			for sub in self.subs.keys():
@@ -42,6 +41,11 @@ class Graph():
 			print 'Finished scraping iteration. Starting over...'
 	
 	def get_big_subs(self):
+		# if we already have the list, just load it from file
+		if file.exists('subreddits.csv')
+			load_subs()
+			return
+		# otherwise, build the list
 		subs = self.reddit_get('/reddits')
 		while True:
 			big_sub_found = False
@@ -54,6 +58,8 @@ class Graph():
 				break
 			sleep(2)
 			subs = self.reddit.get_next()
+		# save the list to file so we do not have to load it multiple times
+		save_subs()
 
 	def get_new_users(self, sub):
 		users = set()
@@ -88,6 +94,28 @@ class Graph():
 				if self.subs.has_key(sub) and self.subs.has_key(sub2):
 					self.graph[self.subs[sub], self.subs[sub2]] += 1
 
+	def load_subs(self):
+		reader = open('subreddits.csv', 'r')
+		for line in reader.readlines():
+			tokens = line.split(',')
+			self.subs[tokens[0]] = int(tokens[1])
+
+	def load_users(self):
+		self.indexed_users = set()
+		if not file.exists('indexed_users.csv'):
+			return
+		reader = open('indexed_users.csv', 'r')
+		for line in reader.readlines():
+			tokens = line.split(',')
+			self.indexed_users.add(tokens[0])
+
+	def load_new_users(self):
+		new_users = set()
+		if not file.exists('new_users.csv', 'r'):
+			return new_users
+		reader = open('new_users.csv', 'r'):
+		
+		return new_users
 	def save_subs(self):
 		writer = csv.writer(open('subreddits.csv', 'wb'))
 		for key, value in self.subs.items():
@@ -103,6 +131,7 @@ class Graph():
 		result = self.reddit.get(url)
 		wait_time = 3
 		while result is None:
+			print "failed. waiting {0} seconds and trying again...".format(wait_time)
 			sleep(wait_time)
 			result = self.reddit.get(url)
 			wait_time = wait_time * 2
