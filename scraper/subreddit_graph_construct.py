@@ -42,13 +42,13 @@ class Graph():
 				self.save()
 
 	def load_info(self):
-		if False:
+		try:
 			data = pickle.load(open(self.outfile, 'rb'))
 			self.subs = data['subs']
 			self.users = data['users']
 			self.indexed_users = data['indexed_users']
 			self.graph = data['graph']
-		else:
+		except:
 			self.subs = self.get_big_subs(self.size_lim)
 			self.users = frozenset()
 			self.indexed_users = frozenset()
