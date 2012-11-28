@@ -583,6 +583,7 @@ class ReddiWrap:
 		if posts == None or len(posts) == 0: return
 		post.comments     = posts[0].comments
 		post.num_comments = posts[0].num_comments
+		post.score        = posts[0].score
 
 
 	##########

@@ -1,6 +1,7 @@
 import time
 import datetime
 from ReddiWrap import ReddiWrap
+import numpy as np
 
 reddit = ReddiWrap() # Create new instance of ReddiWrap
 login_result = reddit.login('brainsareneat', 'isminus1')
