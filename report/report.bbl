@@ -1,0 +1,42 @@
+\begin{thebibliography}{1}
+
+\bibitem{pmi}
+K.W. Church and P.~Hanks.
+\newblock Word association norms, mutual information, and lexicography.
+\newblock {\em Computational linguistics}, 16(1):22--29, 1990.
+
+\bibitem{netinf}
+M.~Gomez-Rodriguez, J.~Leskovec, and A.~Krause.
+\newblock Inferring networks of diffusion and influence.
+\newblock {\em ACM Transactions on Knowledge Discovery from Data (TKDD)},
+  5(4):21, 2012.
+
+\bibitem{influential}
+D.~Kempe, J.~Kleinberg, and {\'E}.~Tardos.
+\newblock Influential nodes in a diffusion model for social networks.
+\newblock {\em Automata, Languages and Programming}, pages 99--99, 2005.
+
+\bibitem{info_contag}
+Kristina Lerman and Rumi Ghosh.
+\newblock Information contagion: an empirical study of the spread of news on
+  digg and twitter social networks.
+\newblock {\em CoRR}, abs/1003.2664, 2010.
+
+\bibitem{viral_dynamics}
+Jure Leskovec, Lada~A. Adamic, and Bernardo~A. Huberman.
+\newblock The dynamics of viral marketing.
+\newblock {\em ACM Trans. Web}, 1(1), May 2007.
+
+\bibitem{twitter_trend}
+Michael Mathioudakis and Nick Koudas.
+\newblock Twittermonitor: trend detection over the twitter stream.
+\newblock In Ahmed~K. Elmagarmid and Divyakant Agrawal, editors, {\em SIGMOD
+  Conference}, pages 1155--1158. ACM, 2010.
+
+\bibitem{wainwright}
+M.J. Wainwright and M.I. Jordan.
+\newblock Graphical models, exponential families, and variational inference.
+\newblock {\em Foundations and Trends{\textregistered} in Machine Learning},
+  1(1-2):1--305, 2008.
+
+\end{thebibliography}

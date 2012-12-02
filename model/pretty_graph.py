@@ -58,3 +58,8 @@ if __name__=="__main__":
 		graph_netinf(sys.argv[2])
 	else:
 		graph_matrix(open(sys.argv[2])["graph"])
+
+
+	if sys.argv[1] == 'test':
+		m = np.random.rand(40,40)
+		pretty_graph.graph_matrix(m)
