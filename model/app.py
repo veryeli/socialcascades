@@ -1,28 +1,36 @@
 import pretty_graph
 import sys
 import numpy as np
-
+import graph
 
 def main(args):
 
-	m = np.random.rand(40,40)
-	pretty_graph.graph_matrix(m)
 
-	sys.exit()
-	dataset_file = args[1]
-	complete_graph_outfile = args[2]
-	netinf_outfile = args[2]
+	#site_file = args[1]
+	site_file = 'data/infections_daily.csv'
+
+	g=graph.Graph(range(60))
+
+	#training_file = args[2]
+	training_file = 'data/infections_daily.csv'
+	#g.learn_parameters(training_file)
+	print g.edges
+
+	#complete_graph_outfile = args[2]
+
+
+
+	#netinf_outfile = args[2]
 	
-	#load up corpus
-	c = sliced_corpus(args[1])
+#	# generate adjacency graphs
+#	pretty_graph.graph_complete_matrix("Adjacency",c.get_adjacency_graph())
 
-	# generate adjacency graphs
-	pretty_graph.graph_complete_matrix("Adjacency",c.get_adjacency_graph())
-	# generate contagion graphs
-	pretty_graph.graph_complete_matrix("Contagion",c.get_contagion_graph())	
+	#np.savez("graph.npz", graph=g.edges)
+	
+	pretty_graph.graph_matrix(np.load("graph.npz")["graph"][3])	
 	
 	# generate netinf graph
-	c.write_data_for_netinf(netinf_outfile)		
+	#c.write_data_for_netinf(netinf_outfile)		
 
 #-----------------------------------
 		#predicting

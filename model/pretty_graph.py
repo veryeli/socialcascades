@@ -4,25 +4,35 @@ import numpy as np
 
 
 
-rainbow=['#D92727', '#D72E32', '#D6363E', '#D43E4A', '#D34656', '#D14E62', '#D0566E', '#CE5E7A', '#CD6686', '#CC6D92', '#CA759E', '#C97DAA', '#C785B6', '#C68DC2', '#C495CE', '#C39DDA', '#C2A5E6']
+rainbow=['#2E0854', '#3A074E', '#470648', '#540643', '#61053D', '#6E0538', '#7A0432', '#87042C', '#940327', '#A10321', '#AE021C', '#BA0216', '#C70110', '#D4010B', '#E10005', '#EE0000']
 rainbow=rainbow[::-1]
 
 
 def graph_matrix(m):
 	out = open('graph.gv', 'w')
-	out.write("graph G {\n")
-	#out.write("size=[10,10]\n")
+	out.write("graph \"G\" {\nratio=1\n")
+	
 	s = m.shape[0]
-	print s
+	s = s/6
 	for i in range(s):
-		for j in range(s):
+		
+		out.write("%d [pos=\"%d,%d!\"	];\n" % (i,i,i))
+	out.write('\n')
+	for i in range(s):	
+		for j in range(s * 3 + i,s*4):
 			if i != j:
-				if m[i,j]>=.9:
-					magnitude = int(((round(m[i,j] * 10) - 9)* 16))
+				magnitude = m[i][j]
+				print magnitude
+				if magnitude < 1:
+					pass
+				else:
+					magnitude = min(magnitude * 8, 15)
+					magnitude = int(round(magnitude))
 					color=""
-					for k in range(magnitude/2):
+					for k in range(magnitude/4):
 						color +=  rainbow[magnitude-1] + ':'
 					color=color[:-1]
+					j = j - s * 3
 					out.write("%d -- %d [color=\"%s\"];\n" %(i, j, color))
 	out.write('}')
 
@@ -63,3 +73,6 @@ if __name__=="__main__":
 	if sys.argv[1] == 'test':
 		m = np.random.rand(40,40)
 		pretty_graph.graph_matrix(m)
+
+
+
