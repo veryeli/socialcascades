@@ -13,17 +13,17 @@ def graph_matrix(m):
 	out.write("graph \"G\" {\nratio=1\n")
 	
 	s = m.shape[0]
-	s = s/6
+	s = s/2
 	for i in range(s):
 		
 		out.write("%d [pos=\"%d,%d!\"	];\n" % (i,i,i))
 	out.write('\n')
 	for i in range(s):	
-		for j in range(s * 3 + i,s*4):
+		for j in range(s + i, s * 2):
 			if i != j:
 				magnitude = m[i][j]
 				print magnitude
-				if magnitude < 1:
+				if magnitude < 0:
 					pass
 				else:
 					magnitude = min(magnitude * 8, 15)
@@ -32,7 +32,7 @@ def graph_matrix(m):
 					for k in range(magnitude/4):
 						color +=  rainbow[magnitude-1] + ':'
 					color=color[:-1]
-					j = j - s * 3
+					j = j - s
 					out.write("%d -- %d [color=\"%s\"];\n" %(i, j, color))
 	out.write('}')
 

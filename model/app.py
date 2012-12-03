@@ -2,18 +2,19 @@ import pretty_graph
 import sys
 import numpy as np
 import graph
+from transform import transform_to_netinf
 
 def main(args):
 
 
 	#site_file = args[1]
-	site_file = 'data/infections_daily.csv'
+	data_file = 'data/synthetic_5.csv'
 
-	g=graph.Graph(range(60))
+	g=graph.Graph(range(5))
 
 	#training_file = args[2]
-	training_file = 'data/infections_daily.csv'
-	#g.learn_parameters(training_file)
+	#training_file = 'data/synthetic_5.csv'
+	g.learn_parameters(data_file)
 	print g.edges
 
 	#complete_graph_outfile = args[2]
@@ -25,12 +26,12 @@ def main(args):
 #	# generate adjacency graphs
 #	pretty_graph.graph_complete_matrix("Adjacency",c.get_adjacency_graph())
 
-	#np.savez("graph.npz", graph=g.edges)
-	
-	pretty_graph.graph_matrix(np.load("graph.npz")["graph"][3])	
+	np.savez(data_file + ".npz", theta_st=g.edges, theta_s=g.nodes)
+
+	pretty_graph.graph_matrix(np.load(data_file + ".npz")["graph"][3])	
 	
 	# generate netinf graph
-	#c.write_data_for_netinf(netinf_outfile)		
+	transform_to_netinf(data_file)		
 
 #-----------------------------------
 		#predicting

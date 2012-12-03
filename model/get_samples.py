@@ -11,8 +11,6 @@ def get_samples(filename):
                 arr = np.array(rows)
                 rows = []
                 yield arr
-                if i == 5:
-                    return
             else:
                 tokens = line.split(',')
                 row = [int(x) for x in tokens]
