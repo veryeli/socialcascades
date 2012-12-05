@@ -3,13 +3,14 @@ import math
 import random
 import sys
 from get_samples import get_samples
+import graph
 
-def test(data_file_prefix, num_sites):
+def test(data_file_prefix, num_sites, num_splits):
     results = []
-    for fold in range(6):
-        print "Fold %d of 6" % (fold)
-        train_file = data_file_prefix + 'train' + str(fold) + '.csv'
-        test_file  = data_file_prefix + 'test' + str(fold) + '.csv'
+    for fold in range(num_splits):
+        print "Fold %d of %d" % (fold, num_splits)
+        train_file = data_file_prefix + '_train' + str(fold) + '.csv'
+        test_file  = data_file_prefix + '_test' + str(fold) + '.csv'
         g = graph.Graph(range(num_sites))
         print "Learning parameters..."
         g.learn_parameters(train_file)
@@ -17,9 +18,12 @@ def test(data_file_prefix, num_sites):
         results.append(g.test(test_file))
         numpy.savez(data_file_prefix + "results.npz", results=results)
     print "all done testing!"
-    print results
+    pretty_print(results)
 
-def 
+def pretty_print(results):
+    print '# Correct'.center(10) + "|" + 'Total'.center(10) + "|" + '% Correct'.center(10) + "|" + '% Nodes Correct'.center(20)
+    for r in results:
+        print '{0}|{1}|{2}|{3}'.format(str(r[0]).center(10),str(r[1]).center(10),str(r[2]).center(10),str(r[3]).center(20))
 
 def create_holdouts(filename, num_splits):
     print "Creating testing data"
@@ -30,6 +34,7 @@ def create_holdouts(filename, num_splits):
         for row in range(0,sample.shape[0]):
             f.write(','.join([str(x) for x in sample[row,:].tolist()[0]]))
             f.write('\n')
+        f.write('\n')
         count += 1
         print count
 
@@ -45,13 +50,17 @@ def create_training(filename, num_splits):
             for row in range(0,sample.shape[0]):
                 f.write(','.join([str(x) for x in sample[row,:].tolist()[0]]))
                 f.write('\n')
+            f.write('\n')
         count += 1
         print count
 
 if __name__ == "__main__":
-    filename = sys.argv[1]
-    num_splits = int(sys.argv[2])
-    create_training(filename, num_splits)
-    create_holdouts(filename, num_splits)
-    print 'Done!'
+    if len(sys.argv) == 3:
+        filename = sys.argv[1]
+        num_splits = int(sys.argv[2])
+        create_training(filename, num_splits)
+        create_holdouts(filename, num_splits)
+        print 'Done!'
+    elif len(sys.argv) == 4:
+        test(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
     
