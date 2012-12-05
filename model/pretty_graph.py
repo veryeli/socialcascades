@@ -5,35 +5,99 @@ import numpy as np
 
 
 rainbow=['#2E0854', '#3A074E', '#470648', '#540643', '#61053D', '#6E0538', '#7A0432', '#87042C', '#940327', '#A10321', '#AE021C', '#BA0216', '#C70110', '#D4010B', '#E10005', '#EE0000']
-rainbow=rainbow[::-1]
+#rainbow=rainbow[::-1]
 
 
-def graph_matrix(m):
+def graph_matrix(m, names):
 	out = open('graph.gv', 'w')
 	out.write("graph \"G\" {\nratio=1\n")
 	
 	s = m.shape[0]
-	s = s/6
+	s = s/2
 	for i in range(s):
-		
-		out.write("%d [pos=\"%d,%d!\"	];\n" % (i,i,i))
+		#out.write("%d [pos=\"%d,%d!\"	];\n" % (i,i,i))
+		out.write('{0};\n'.format(names[i]))
 	out.write('\n')
 	for i in range(s):	
-		for j in range(s * 3 + i,s*4):
-			if i != j:
+		for j in range(s + i,m.shape[0]):
+			if i != (j-s):
 				magnitude = m[i][j]
 				print magnitude
-				if magnitude < 1:
+				if magnitude < 0:
 					pass
 				else:
-					magnitude = min(magnitude * 8, 15)
+					magnitude = min(magnitude / 500, 15)
 					magnitude = int(round(magnitude))
 					color=""
 					for k in range(magnitude/4):
 						color +=  rainbow[magnitude-1] + ':'
 					color=color[:-1]
-					j = j - s * 3
-					out.write("%d -- %d [color=\"%s\"];\n" %(i, j, color))
+					j = j - s
+					out.write("%s -- %s [color=\"%s\"];\n" %(names[i], names[j], color))
+	out.write('}')
+
+def graph_adj_matrix(m, names):
+	names = [name[3:-1] for name in names]
+	out = open('reddit.gv', 'w')
+	out.write("graph \"G\" {\nratio=1\n")
+	
+	s = m.shape[0]
+	counts = []
+	for i in range(0,s):
+		counts.append(m[i][i])
+	for i in range(0,s):
+		for j in range(0,s):
+			m[i][j] = m[i][j] / min(counts[i], counts[j])
+	stdev = np.std(m)
+	mean = np.mean(m)
+	
+
+	vals = []
+	for i in range(s):
+		if '4' in names[i]:
+			if names[i] == '4chan':
+				names[i]='fourchan'
+				vals.append(i)
+			else:
+				pass
+		#elif names[i] in ['pics', 'gaming', 'worldnews', 'videos', 'todayilearned', 'IAmA', 'funny', 'atheism', 'politics', 'science', 'AskReddit', 'technology', 'WTF', 'blog','announcements', 'bestof', 'AdviceAnimals', 'Music', 'aww', 'askscience', 'movies']:
+		#	pass
+		elif sum(m[i]) < 28:
+			print names[i] + ' is small'
+		else:
+			vals.append(i)
+
+	#print 'Stdev: {0} Mean: {1}'.format(stdev, mean)
+	for i in vals:
+		#out.write("%d [pos=\"%d,%d!\"	];\n" % (i,i,i))
+		out.write('{0};\n'.format(names[i]))
+	out.write('\n')
+	print len(vals)
+	for k in range(len(vals)):	
+		for l in range(k+1, len(vals)):
+			i = vals[k]
+			j = vals[l]
+			magnitude = m[i][j]
+			if magnitude < 0:
+				pass
+			else:
+				# magnitude = min(math.log(magnitude) - 7, 15)
+				# magnitude = int(round(magnitude)) * 2
+				magnitude -= mean
+				magnitude = magnitude / stdev
+
+				magnitude = int(round(min(15,max(0,magnitude))))
+				#magnitude = min(int(magnitude) - 5, 15)
+				print magnitude
+				if magnitude < 5:
+					magnitude = 0
+				#print magnitude
+				color=""
+				for n in range(magnitude/4):
+					color +=  rainbow[magnitude-1] + ':'
+				color=color[:-1]
+				if magnitude > 0:
+					out.write("%s -- %s [color=\"%s\"];\n" %(names[i], names[j], color))
 	out.write('}')
 
 

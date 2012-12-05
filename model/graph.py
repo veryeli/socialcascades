@@ -71,14 +71,24 @@ class Graph:
 		freq = np.array([item if item > 0 else .001 for item in freq])
 		return freq/self.num_samples
 
+	# def calc_mu_st(self, samples):
+	# 	for sample in get_samples(samples):
+	# 		nn11 = np.transpose(state) * state
+	#         np.fill_diagonal(nn11, 0)
+	#         nn10 = np.transpose(state) * np.matrix(np.ones(state.shape[1])) - nn11
+	#         np.fill_diagonal(nn10, 0)
+	#         nn01 = np.transpose(nn10)
+	#         s = (state.shape[1],state.shape[1])
+	#         nn00 = np.matrix(np.ones(s)) - nn11 - nn10 - nn01
+	#         np.fill_diagonal(nn00, 0)
+
 	def calc_mu_st(self, samples):
 		freqs = np.array([])
-		num_samples=float(sum([sample.shape[0] -1 for sample in get_samples(samples)]))
 		for i in range(4):
 			pair = self.pair_indexer[i]
 			new = self.get_mu_st_counts(samples, pair)/self.num_samples
 			if freqs.shape[0]<1:
-				freqs =new
+				freqs = new
 			else:
 				freqs = np.concatenate((freqs, new))
 		return freqs
