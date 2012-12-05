@@ -101,9 +101,9 @@ class Graph:
 				lowright = self.calc_mu_quadrant(n2, n2)
 				mu_s[0,self.num_sites:] += n2
 				mu_st11[self.num_sites:,self.num_sites:] += lowright[0] # nn11
-				mu_st10[0:self.num_sites,self.num_sites:] += lowright[1] # nn10
-				mu_st01[0:self.num_sites,self.num_sites:] += lowright[2] # nn01
-				mu_st00[0:self.num_sites,self.num_sites:] += lowright[3] # nn00
+				mu_st10[self.num_sites:,self.num_sites:] += lowright[1] # nn10
+				mu_st01[self.num_sites:,self.num_sites:] += lowright[2] # nn01
+				mu_st00[self.num_sites:,self.num_sites:] += lowright[3] # nn00
 		mu_s /= total_samples
 		mu_st11 /= total_samples
 		mu_st10 /= total_samples
