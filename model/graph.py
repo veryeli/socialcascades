@@ -2,7 +2,7 @@ import numpy as np
 from get_samples import get_samples
 import math
 import pickle
-
+import random
 
 class Graph:
 	def __init__(self, sites):
@@ -12,65 +12,35 @@ class Graph:
 		self.nodes = np.empty((self.num_nodes, 0))
 		print "initializing %s^2 edges" %(self.num_nodes)
 		self.edges = np.empty((4,self.num_nodes, self.num_nodes))
-		#self.pair_indexer = {0:(0,0), 1:(0,1), 2:(1,0), 3:(1,1)}
-		#self.pairs = {(0,0):self.ioo,(0,1):self.ioi,(1,0):self.iio,(1,1):self.iii}
 
 	def learn_parameters(self, samples):
-		
-	 	# returns a list: [mu_s, mu_st00, mu_st01, mu_st10, mu_st11]
+		# returns a list: [mu_s, mu_st00, mu_st01, mu_st10, mu_st11]
 	 	mu = self.calc_mu(samples)
 	 	mu_s = mu[0]
 	 	mu_st = mu[1:]
-	# 	mu_s       = self.calc_mu_s(samples)
-	# 	print mu_s
-	# 	print "Learning mu_st"
-	# 	mu_st      = self.calc_mu_st(samples)
-	# 	print mu_st
-
 	 	print "Learning theta_s"
 	 	theta_s = np.matrix(np.zeros((1, self.num_nodes)))
 	 	for i in range(0,mu_s.shape[1]):
 	 		if mu_s[0,i] > 0:
 				theta_s[0,i] = math.log(mu_s[0,i])
-		
-		
-
 		s = (self.num_nodes, self.num_nodes)
 		theta_st = [np.matrix(np.zeros(s)),np.matrix(np.zeros(s)),np.matrix(np.zeros(s)),np.matrix(np.zeros(s))]
-
-		# print "counting samples"
-		# self.num_samples=float(sum([sample.shape[0] -1 for sample in get_samples(samples)]))
-		# print "Num Examples: %s" %(sum([1 for sample in get_samples(samples)]))
-		# print "Total samples: {0}".format(self.num_samples)
-
 		denom00 = (1 - mu_s.T) * (1 - mu_s)
 		denom01 = (1 - mu_s.T) * mu_s
 		denom10 = mu_s.T * (1 - mu_s)
 		denom11 = mu_s.T * mu_s
 		denom = [denom00,denom01,denom10,denom11]
-
 	 	print "Learning theta_st"
+	 	#TODO: This could be made faster by using a numpy selector
 		for k in range(0,4):
 			for i in range(self.num_nodes):
 				for j in range(self.num_nodes):
 					if mu_st[k][i,j] > 0 and denom[k][i,j] > 0:
 						theta_st[k][i,j] = math.log(mu_st[k][i,j]/denom[k][i,j])
-						# denom1 = mu_s[i] if self.pair_indexer[k][0] else 1 -mu_s[i]
-						# denom2 = mu_s[j] if self.pair_indexer[k][1] else 1-mu_s[j]
-						# denom = denom1 * denom2
-						# self.edges[k][i][j] = math.log(mu_st[k][i][j]/denom)
 		np.save(samples.replace('.csv', '_theta_s'), theta_s)
 		np.save(samples.replace('.csv', '_theta_st'), theta_st)
 		self.nodes = theta_s
 		self.edges = theta_st
-			
-
-	# def calc_mu_s(self, samples):
-	# 	frequencies = np.array([self.get_frequency_count(sample) for sample in get_samples(samples)])
-	# 	frequencies2 = frequencies#[get_frequency_count(sample) for sample in samples[1:]]
-	# 	freq=np.concatenate((self.get_frequency_count(frequencies), self.get_frequency_count(frequencies2)))
-	# 	freq = np.array([item if item > 0 else .001 for item in freq])
-	# 	return freq/self.num_samples
 
 	def calc_mu(self, samples):
 		mu_s = np.matrix(np.zeros((1,self.num_nodes)))
@@ -127,52 +97,46 @@ class Graph:
 		nn00 = np.matrix(np.ones(s1)) - nn11 - nn10 - nn01
 		np.fill_diagonal(nn00, 0)
 		return (nn00, nn01, nn10, nn11)
-	# def calc_mu_st(self, samples):
-	# 	freqs = np.array([])
-	# 	for i in range(4):
-	# 		pair = self.pair_indexer[i]
-	# 		new = self.get_mu_st_counts(samples, pair)/self.num_samples
-	# 		if freqs.shape[0]<1:
-	# 			freqs = new
-	# 		else:
-	# 			freqs = np.concatenate((freqs, new))
-	# 	return freqs
 
+    def prob(self, state):
+        """
+        Calculates the probability of a given state using the exponential
+        family parameterization learned from a prior dataset. Note that
+        we are assuming A(theta) = 0 (i.e., the graph is triangulated).
+        """
+        sum_s = np.sum(state * np.transpose(self.nodes))
+        
+        nn11 = np.transpose(state) * state
+        np.fill_diagonal(nn11, 0)
+        nn10 = np.transpose(state) * np.matrix(np.ones(state.shape[1])) - nn11
+        np.fill_diagonal(nn10, 0)
+        nn01 = np.transpose(nn10)
+        s = (state.shape[1],state.shape[1])
+        nn00 = np.matrix(np.ones(s)) - nn11 - nn10 - nn01
+        np.fill_diagonal(nn00, 0)
 
-	# def get_mu_st_counts(self, samples, pair):
-	# 	print "For pair " + str(pair)
-	# 	f = self.pairs[pair]
-	# 	counts = np.empty((self.num_nodes, self.num_nodes))
-	# 	for sample in get_samples(samples):	
-	# 		for i in range(sample.shape[0]-1):
-	# 			vec = np.concatenate((sample[i], sample[i+1]))
-	# 			for j in range(self.num_nodes):
-	# 				counts[j] += f(vec[j], vec)
-		
-	# 	return np.array([counts])
+        sum_st00 = np.sum(np.multiply(nn00, self.edges[0]))
+        sum_st01 = np.sum(np.multiply(nn01, self.edges[1]))
+        sum_st10 = np.sum(np.multiply(nn10, self.edges[2]))
+        sum_st11 = np.sum(np.multiply(nn11, self.edges[3]))
+        return math.exp(sum_s + sum_st00 + sum_st01 + sum_st10 + sum_st11)
 
-	# def predict(self, example):
-	# 	pass
+	def predict(self, current_nodes):
+	 	return predict_hill_climbing(current_nodes)
 
+    def predict_hill_climbing(self, current_nodes, steps=100):
+        state = np.matrix(np.zeros(1,self.num_nodes))
+        state[0,:self.num_sites] = current_nodes
+        for i in range(0,steps):
+            nidx = random.randrange(self.num_sites, self.num_nodes)
+            state[0,nidx] = 0
+            p0 = self.prob(state)
+            state[0,nidx] = 1
+            p1 = self.prob(state)
+            if p0 > p1:
+                state[0,nidx] = 1
+        return state
 
-
-	# def get_frequency_count(self, sample):
-	# 	return sum([sample[i] for i in range(sample.shape[0])])
-
-	# def I(self, node1, node2, v1, v2):
-	# 	return 1 * (node1 == v1 and node2 == v2)
-
-	# def ioo(self, val, arr):
-	# 	return np.array([1 if a + val == 0 else 0 for a in arr])
-
-	# def iio(self, val, arr):
-	# 	return np.array([1 if a - val == 1 else 0 for a in arr])
-
-	# def ioi(self, val, arr):
-	# 	return np.array([1 if val - a == 1 else 0 for a in arr])
-
-	# def iii(self, val, arr):
-	# 	return np.array([1 if a + val == 2 else 0 for a in arr])
 
 
 if __name__ == "__main__":
