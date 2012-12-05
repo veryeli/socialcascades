@@ -192,29 +192,6 @@ def create_slices(hosts, clusters, slicer):
             assert(tokens[0] != "")
             mode = 'B'
             bleft = int(tokens[0])
-            #if len(infections) > 0 and len(infections) % 100 == 0:
-                #for i in range(0,100):
-                    # Trim the start and end of the infection vector
-                    # startIdx = 0
-                    # zeros = np.zeros(len(hosts))
-                    # for i,arr in enumerate(infection):
-                    #     startIdx = i
-                    #     if not np.array_equal(zeros, arr):
-                    #         break
-                    # print 'start is {0}'.format(startIdx)
-                    # endIdx = -1
-                    # while np.array_equal(zeros, infection[endIdx]):
-                    #     endIdx -= 1
-                    # endIdx = len(infection) + endIdx + 1
-                    # print 'end is {0}'.format(endIdx)
-                    # infection = infection[startIdx:endIdx]
-                    # Create numpy matrix
-                    #infections[i] = np.array(infections[i])
-                    # Save the list of infection matrices
-                #np.savez('data/infections{0}.npz'.format(infection_count), infections)
-                # pickle.dump(infections, open('data/infections{0}.data'.format(infection_count), 'wb'))
-                # infections = []
-                # infection_count += 1
             if valid_cluster:
                 for sample in infection:
                     f.write(','.join(sample) + '\n')
