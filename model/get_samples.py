@@ -1,4 +1,3 @@
-import fileinput
 import numpy as np
 import sys
 def get_samples(filename):
@@ -6,7 +5,7 @@ def get_samples(filename):
         rows = []
         for line in f:
             if len(line.strip()) == 0:
-                arr = np.array(rows)
+                arr = np.matrix(rows)
                 rows = []
                 yield arr
             else:
