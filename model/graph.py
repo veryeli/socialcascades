@@ -27,8 +27,12 @@ class Graph:
 	# 	mu_st      = self.calc_mu_st(samples)
 	# 	print mu_st
 
-	# 	print "Learning thetas"
-		self.nodes = [math.log(m) for m in mu_s.tolist()[0] if m > 0]
+	 	print "Learning theta_s"
+	 	theta_s = np.matrix(np.zeros((1, self.num_nodes)))
+	 	for i in range(0,mu_s.shape[1]):
+	 		if mu_s[0,i] > 0:
+				theta_s[0,i] = math.log(mu_s[0,i])
+		
 		
 
 		s = (self.num_nodes, self.num_nodes)
@@ -45,18 +49,20 @@ class Graph:
 		denom11 = mu_s.T * mu_s
 		denom = [denom00,denom01,denom10,denom11]
 
-	# 	print "Learning more thetas...."
+	 	print "Learning theta_st"
 		for k in range(0,4):
 			for i in range(self.num_nodes):
 				for j in range(self.num_nodes):
-					print str(i) +' '+ str(j) + ' '+str(k)
 					if mu_st[k][i,j] > 0 and denom[k][i,j] > 0:
-						self.edges[k][i,j] = math.log(mu_st[k][i,j]/denom[k][i,j])
+						theta_st[k][i,j] = math.log(mu_st[k][i,j]/denom[k][i,j])
 						# denom1 = mu_s[i] if self.pair_indexer[k][0] else 1 -mu_s[i]
 						# denom2 = mu_s[j] if self.pair_indexer[k][1] else 1-mu_s[j]
 						# denom = denom1 * denom2
 						# self.edges[k][i][j] = math.log(mu_st[k][i][j]/denom)
-		
+		np.save(samples.replace('.csv', '_theta_s'), theta_s)
+		np.save(samples.replace('.csv', '_theta_st'), theta_st)
+		self.nodes = theta_s
+		self.edges = theta_st
 			
 
 	# def calc_mu_s(self, samples):
@@ -101,6 +107,7 @@ class Graph:
 				mu_st10[self.num_sites:,self.num_sites:] += lowright[1] # nn10
 				mu_st01[self.num_sites:,self.num_sites:] += lowright[2] # nn01
 				mu_st00[self.num_sites:,self.num_sites:] += lowright[3] # nn00
+			break
 		mu_s /= total_samples
 		mu_st11 /= total_samples
 		mu_st10 /= total_samples
