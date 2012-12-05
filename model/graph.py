@@ -36,6 +36,8 @@ class Graph:
 	def learn_parameters(self, samples):
 		print "counting samples"
 		self.num_samples=float(sum([sample.shape[0] -1 for sample in get_samples(samples)]))
+		print "Num Examples: %s" %(sum([1 for sample in get_samples(samples)]))
+
 		print self.num_samples
 		print "Learning mu_s"
 		mu_s       = self.calc_mu_s(samples)
@@ -61,7 +63,6 @@ class Graph:
 						denom = denom1 * denom2
 						self.edges[k][i][j] = math.log(mu_st[k][i][j]/denom)
 		print self.edges
-			
 			
 
 	def calc_mu_s(self, samples):
@@ -105,6 +106,9 @@ class Graph:
 					counts[j] += f(vec[j], vec)
 		
 		return np.array([counts])
+
+	def predict(self, example):
+		pass
 
 
 

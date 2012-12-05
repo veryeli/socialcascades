@@ -1,0 +1,92 @@
+\documentclass[9pt]{beamer}
+\usepackage{amsmath,amsthm,amssymb, dsfont}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetheme{Boadilla} 
+\def\I{\mathbb{I}}
+\usetikzlibrary{arrows,automata}
+\begin{document}
+
+\title{Infectious Cascades in Knowledge-Based Communities}   
+\author{Eliana Feasley and Wesley Tansey} 
+\date{\today} 
+
+\frame{\titlepage} 
+
+
+\section{Section no.1} 
+\frame{\frametitle{Social Cascades}
+Social cascades capture the concept of new ideas, or \textit{memes}, spreading across influence networks and infecting subcultures. Cascade theory has applications to several areas, including epidemiology, graph theory, machine learning, and marketing. In this project, we examine the dynamics of information spread across sub-communities with overlapping networks in several real-world domains: the social news site \textit{reddit}, a collection of blogs and mainstream media \cite{memetracker}, and the question-answer network \textit{StackExchange}. Our goal is to capture the flow of memes by learning a graphical model for each domain. We learn a graphical model describing the transition between timesteps, effectively capturing how the memes cascade through the network.
+
+}
+
+\frame{\frametitle{Problem Statement} 
+
+Given sites $\mathcal{D}$ with overlapping connections $\mathcal{C}$ via shared users, predict topic vector $v_{d,t+1}$ in site $d$ at time $t+1$ given the topics $V$ in all documents at time $t$.
+
+Following the model in \cite{influential}, we refer to a node as \textit{contagious} for a given phrase if it has had that phrase trend internally within the last timestep. A node that contains a previously trending phrase can be viewed as having become \textit{infected.} 
+
+We model this domain as an unfolding Markov Chain, in which at each timestep, nodes become infected or uninfected. See the below graph, in which nodes $\{A,B,C\}$ represent the states of three sites at time $t$, and the nodes $\{A',B',C'\}$ represent the same nodes at time $t+1$.
+$$\begin{tikzpicture}[-,>=stealth',shorten >=1pt,auto,node distance=2cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=black,draw=none,text=white]
+
+  \node[state] (A)                    {$A$};
+  \node[state]         (B) [below of=A] {$B$};
+  \node[state]         (C) [below of=B] {$C$};
+  \node[state]         (A1) [right  of=A] {$A'$};
+  \node[state]         (B1) [right of=B] {$B'$};
+  \node[state]         (C1) [right of=C] {$C'$};
+
+
+  \path (A) edge        node {} (A1)
+        (A) edge        node {} (B1)
+        (A) edge        node {} (C1)
+        (B) edge        node {} (A1)
+        (B) edge        node {} (B1)
+        (B) edge        node {} (C1)
+        (C) edge        node {} (A1)
+        (C) edge        node {} (B1)
+        (C) edge        node {} (C1)
+        (A1) edge        node {} (B1)
+        (A1) edge [bend left] node {} (C1)
+        (B1) edge        node {} (C1);
+\end{tikzpicture}
+$$
+}
+
+\frame{\frametitle{Datasets} 
+\section{Datasets}
+\textbf{Datasets}\\
+Our algorithm is evaluated on three datasets.
+\begin{description}
+  \item[MemeTracker] A collection of popular newssites during the campaign season of 2008. Sites are blogs and major media sources. Memes detected via the Memetracker algorithm \cite{memetracker} are designated infections.
+  \item[StackExchange] There are 28 different sites on StackExchange. Pointwise Mutual Information \cite{pmi} identifies salient bigrams. Common bigrams detected by PMI that occur in bursts are infections.
+  \item[Synthetic] Infections are randomly initialized and spread through sampling via MCMC from generated parameters.
+\end{description}
+}
+
+\frame{\frametitle{Parameter Learning} 
+
+\textbf{Learning Parameters}\\
+We used the method for finding the MLE estimate in triangulated graphs described in \cite{wainwright} to learn the weights of our edges. The model is trained on every pairs of steps $t,t+1$. We define indicator functions 
+$$\I[s]=\begin{cases}1&$Infection occurs in site $s\\0& s $ is not uninfected$\end{cases}$$ 
+and
+$$\I[s,t;j,k]=\begin{cases}1&$if infection is present in site $s$ ($j=1$) and $t$ ($k=1$)$\\
+0& $otherwise$\end{cases}$$ 
+Parameters are the logs of the expectations of these indicator functions.\\
+\vspace{10pt}
+\textbf{Inference Problem}\\
+Our question “Given a cascade at time $t$, what will be the state of the cascade at time $t+1$ can be restated as the following variational problem:\\
+Given that we have learned our parameters $\theta_s$ and $\theta_st$, and that we have observed half of the nodes $X=\{x_1 ,x_2,\dots,x_n\}$ representing all of our sites at time $t$, what is the MLE assignment to the nodes $X^*=\{x^*_1 ,x^*_2,\dots,x^*_n\}$?\\
+This optimization over $2^n$ possible assignments with $n$ equal to the number of sites under examination is NP-complete.\\
+Good approximations are found by searching the parameter space. }
+
+\frame{\frametitle{Discussion} 
+\bibliography{sources}{}
+\label{refs}
+\bibliographystyle{plain}
+}
+
+\end{document}
+
