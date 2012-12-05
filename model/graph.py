@@ -17,8 +17,6 @@ class Graph:
 
 	def learn_parameters(self, samples):
 		
-	 	print "Learning mu_s"
-
 	 	# returns a list: [mu_s, mu_st00, mu_st01, mu_st10, mu_st11]
 	 	mu = self.calc_mu(samples)
 	 	mu_s = mu[0]
@@ -30,17 +28,16 @@ class Graph:
 	# 	print mu_st
 
 	# 	print "Learning thetas"
-
-		self.nodes = [math.log(m) for m in mu_s]
-		print self.nodes
+		self.nodes = [math.log(m) for m in mu_s.tolist()[0] if m > 0]
+		
 
 		s = (self.num_nodes, self.num_nodes)
 		theta_st = [np.matrix(np.zeros(s)),np.matrix(np.zeros(s)),np.matrix(np.zeros(s)),np.matrix(np.zeros(s))]
 
-		print "counting samples"
-		self.num_samples=float(sum([sample.shape[0] -1 for sample in get_samples(samples)]))
-		print "Num Examples: %s" %(sum([1 for sample in get_samples(samples)]))
-	 	print "Total samples: {0}".format(self.num_samples)
+		# print "counting samples"
+		# self.num_samples=float(sum([sample.shape[0] -1 for sample in get_samples(samples)]))
+		# print "Num Examples: %s" %(sum([1 for sample in get_samples(samples)]))
+		# print "Total samples: {0}".format(self.num_samples)
 
 		denom00 = (1 - mu_s.T) * (1 - mu_s)
 		denom01 = (1 - mu_s.T) * mu_s
@@ -53,13 +50,13 @@ class Graph:
 			for i in range(self.num_nodes):
 				for j in range(self.num_nodes):
 					print str(i) +' '+ str(j) + ' '+str(k)
-					if mu_st[k][i][j] >= 1.0 / self.num_samples:
-						self.edges[k][i][j] = math.log(mu_st[k][i][j]/denom[k][i][j])
+					if mu_st[k][i,j] > 0 and denom[k][i,j] > 0:
+						self.edges[k][i,j] = math.log(mu_st[k][i,j]/denom[k][i,j])
 						# denom1 = mu_s[i] if self.pair_indexer[k][0] else 1 -mu_s[i]
 						# denom2 = mu_s[j] if self.pair_indexer[k][1] else 1-mu_s[j]
 						# denom = denom1 * denom2
 						# self.edges[k][i][j] = math.log(mu_st[k][i][j]/denom)
-	# 	print self.edges
+		
 			
 
 	# def calc_mu_s(self, samples):
@@ -78,9 +75,9 @@ class Graph:
 		mu_st00 = np.matrix(s)
 		total_samples = 0
 		for m1 in get_samples(samples):
-			print total_samples
 			m2 = np.roll(m1, -1, axis=0)
 			total_samples += m1.shape[0]-1
+			print total_samples
 			for i in range(0,m1.shape[0]-1):
 				"""
 				Calculate the edges from n->n'.
@@ -109,8 +106,8 @@ class Graph:
 		mu_st10 /= total_samples
 		mu_st01 /= total_samples
 		mu_st00 /= total_samples
-		print "Mu_s:\n".format(mu_s)
-		print "Mu_st11:\n".format(mu_st11)
+		print "Mu_s:\n{0}".format(mu_s)
+		print "Mu_st11:\n{0}".format(mu_st11)
 		return [mu_s, mu_st00, mu_st01, mu_st10, mu_st11]
 
 	def calc_mu_quadrant(self, n1, n2):
