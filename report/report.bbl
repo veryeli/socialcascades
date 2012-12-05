@@ -22,6 +22,12 @@ Kristina Lerman and Rumi Ghosh.
   digg and twitter social networks.
 \newblock {\em CoRR}, abs/1003.2664, 2010.
 
+\bibitem{memetracker}
+J.~Leskovec, L.~Backstrom, and J.~Kleinberg.
+\newblock Meme-tracking and the dynamics of the news cycle.
+\newblock In {\em Proceedings of the 15th ACM SIGKDD international conference
+  on Knowledge discovery and data mining}, pages 497--506. ACM, 2009.
+
 \bibitem{viral_dynamics}
 Jure Leskovec, Lada~A. Adamic, and Bernardo~A. Huberman.
 \newblock The dynamics of viral marketing.

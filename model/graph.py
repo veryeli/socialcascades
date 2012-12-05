@@ -64,7 +64,6 @@ class Graph:
 						self.edges[k][i][j] = math.log(mu_st[k][i][j]/denom)
 		print self.edges
 			
-			
 
 	def calc_mu_s(self, samples):
 		frequencies = np.array([self.get_frequency_count(sample) for sample in get_samples(samples)])
@@ -97,6 +96,9 @@ class Graph:
 					counts[j] += f(vec[j], vec)
 		
 		return np.array([counts])
+
+	def predict(self, example):
+		pass
 
 
 
