@@ -12,3 +12,5 @@ def test(graph, testfile, steps):
 
 def get_stats(accuracy):
 	num_trials = len(accuracy)
+	pair_indexer = {0:(0,0), 1:(0,1), 2:(1,0), 3:(1,1)}
+	pairs = {(0,0):self.ioo,(0,1):self.ioi,(1,0):self.iio,(1,1):self.iii}
