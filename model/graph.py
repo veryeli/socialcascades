@@ -78,8 +78,9 @@ class Graph:
                 mu_st10[self.num_sites:,self.num_sites:] += lowright[1] # nn10
                 mu_st01[self.num_sites:,self.num_sites:] += lowright[2] # nn01
                 mu_st00[self.num_sites:,self.num_sites:] += lowright[3] # nn00
-            if total_samples > 1000:
-                break # TODO: Remove
+                break
+            total_samples = 1
+            break # TODO: Remove
         mu_s /= total_samples
         mu_st11 /= total_samples
         mu_st10 /= total_samples
