@@ -38,6 +38,11 @@ class Graph:
                 for j in range(self.num_nodes):
                     if mu_st[k][i,j] > 0 and denom[k][i,j] > 0:
                         theta_st[k][i,j] = math.log(mu_st[k][i,j]/denom[k][i,j])
+        print 'theta_s:\n{0}\n\n'.format(theta_s)
+        print 'theta_st11:\n{0}\n\n'.format(theta_st[3])
+        print 'theta_st10:\n{0}\n\n'.format(theta_st[2])
+        print 'theta_st01:\n{0}\n\n'.format(theta_st[1])
+        print 'theta_st00:\n{0}\n\n'.format(theta_st[0])
         np.save(samples.replace('.csv', '_theta_s'), theta_s)
         np.save(samples.replace('.csv', '_theta_st'), theta_st)
         self.nodes = theta_s
@@ -64,30 +69,37 @@ class Graph:
                 n2 = m2[i]
                 upright = self.calc_mu_quadrant(n1, n2)
                 mu_s[0,0:self.num_sites] += n1
-                mu_st11[0:self.num_sites,self.num_sites:] += upright[0] # nn11
-                mu_st10[0:self.num_sites,self.num_sites:] += upright[1] # nn10
-                mu_st01[0:self.num_sites,self.num_sites:] += upright[2] # nn01
-                mu_st00[0:self.num_sites,self.num_sites:] += upright[3] # nn00
+                mu_st11[0:self.num_sites,self.num_sites:] += upright[3] # nn11
+                mu_st10[0:self.num_sites,self.num_sites:] += upright[2] # nn10
+                mu_st01[0:self.num_sites,self.num_sites:] += upright[1] # nn01
+                mu_st00[0:self.num_sites,self.num_sites:] += upright[0] # nn00
                 """
                 Calculate the edges from n'->n'.
                 This is the lower-right quadrant.
                 """
                 lowright = self.calc_mu_quadrant(n2, n2)
                 mu_s[0,self.num_sites:] += n2
-                mu_st11[self.num_sites:,self.num_sites:] += lowright[0] # nn11
-                mu_st10[self.num_sites:,self.num_sites:] += lowright[1] # nn10
-                mu_st01[self.num_sites:,self.num_sites:] += lowright[2] # nn01
-                mu_st00[self.num_sites:,self.num_sites:] += lowright[3] # nn00
+                mu_st11[self.num_sites:,self.num_sites:] += lowright[3] # nn11
+                mu_st10[self.num_sites:,self.num_sites:] += lowright[2] # nn10
+                mu_st01[self.num_sites:,self.num_sites:] += lowright[1] # nn01
+                mu_st00[self.num_sites:,self.num_sites:] += lowright[0] # nn00
+            if total_samples > 50000:
                 break
-            total_samples = 1
-            break # TODO: Remove
+        mu_st11 = np.triu(mu_st11)
+        mu_st10 = np.triu(mu_st10)
+        mu_st01 = np.triu(mu_st01)
+        mu_st00 = np.triu(mu_st00)
         mu_s /= total_samples
         mu_st11 /= total_samples
         mu_st10 /= total_samples
         mu_st01 /= total_samples
         mu_st00 /= total_samples
         print "Mu_s:\n{0}".format(mu_s)
-        print "Mu_st11:\n{0}".format(mu_st11)
+        print "Mu_st11:\n{0}\n\n".format(mu_st11)
+        print "Mu_st10:\n{0}\n\n".format(mu_st10)
+        print "Mu_st01:\n{0}\n\n".format(mu_st01)
+        print "Mu_st00:\n{0}\n\n".format(mu_st00)
+        print "Summed:\n{0}\n\n".format(mu_st11 + mu_st10 + mu_st01 + mu_st00)
         return [mu_s, mu_st00, mu_st01, mu_st10, mu_st11]
 
     def calc_mu_quadrant(self, n1, n2):
@@ -123,8 +135,15 @@ class Graph:
         sum_st01 = np.sum(np.multiply(nn01, self.edges[1]))
         sum_st10 = np.sum(np.multiply(nn10, self.edges[2]))
         sum_st11 = np.sum(np.multiply(nn11, self.edges[3]))
+        result = sum_s + sum_st00 + sum_st01 + sum_st10 + sum_st11
         print "S: {0} ST[00]: {1} ST[01]: {2} ST[10]: {3} ST[11]: {4}".format(sum_s, sum_st00, sum_st01, sum_st10, sum_st11)
-        return math.exp(sum_s + sum_st00 + sum_st01 + sum_st10 + sum_st11)
+        #print "Prob: {0}".format(math.exp(result))
+        #return math.exp(sum_s + sum_st00 + sum_st01 + sum_st10 + sum_st11)
+        #
+        #pseudo-likelihood
+        if result < 0.000001:
+            return 0
+        return result
 
     def predict(self, current_nodes):
         """
@@ -138,7 +157,7 @@ class Graph:
         """
         steps = self.num_sites * steps_per_node
         state = np.matrix(np.zeros((1,self.num_nodes)))
-        state[0,:self.num_sites] = current_nodes
+        state[0,0:self.num_sites] = current_nodes
         for i in range(0,steps):
             nidx = random.randrange(self.num_sites, self.num_nodes)
             state[0,nidx] = 0
@@ -146,7 +165,8 @@ class Graph:
             state[0,nidx] = 1
             p1 = self.prob(state)
             if p0 > p1:
-                state[0,nidx] = 1
+                state[0,nidx] = 0
+        print 'Final prob: {0}'.format(self.prob(state))
         return state[0,self.num_sites:]
 
     def test(self, test_file):
@@ -159,12 +179,19 @@ class Graph:
         nodewise_correct = 0
         for sample in get_samples(test_file):
             print total
-            for i in range(0, sample.shape[0]):
+            for i in range(0, sample.shape[0]-1):
                 current_nodes = sample[i,0:self.num_sites]
-                next = sample[i,self.num_sites:]
+                next = sample[i+1,0:self.num_sites]
                 predicted = self.predict(current_nodes)
-                if next == predicted:
+                true_state = np.matrix(np.zeros((self.num_nodes)))
+                true_state[0,:self.num_sites] = current_nodes
+                true_state[0,self.num_sites:] = next
+                print "Ground: {0}".format(true_state)
+                print "Ground prob: {0}".format(self.prob(true_state))
+                print "Next: {0} Predicted: {1}".format(next, predicted)
+                if (next == predicted).all():
                     correct += 1
+                    nodewise_correct += 1
                 else:
                     for j in range(0, self.num_sites):
                         if next[0,j] == predicted[0,j]:

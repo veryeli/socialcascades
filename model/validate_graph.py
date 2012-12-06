@@ -8,7 +8,7 @@ import graph
 def test(data_file_prefix, num_sites, num_splits):
     results = []
     for fold in range(num_splits):
-        print "Fold %d of %d" % (fold, num_splits)
+        print "Fold %d of %d" % (fold+1, num_splits)
         train_file = data_file_prefix + '_train' + str(fold) + '.csv'
         test_file  = data_file_prefix + '_test' + str(fold) + '.csv'
         g = graph.Graph(range(num_sites))
@@ -16,14 +16,14 @@ def test(data_file_prefix, num_sites, num_splits):
         g.learn_parameters(train_file)
         print "testing...."
         results.append(g.test(test_file))
-        numpy.savez(data_file_prefix + "results.npz", results=results)
+        np.savez(data_file_prefix + "results.npz", results=results)
     print "all done testing!"
     pretty_print(results)
 
 def pretty_print(results):
-    print '# Correct'.center(10) + "|" + 'Total'.center(10) + "|" + '% Correct'.center(10) + "|" + '% Nodes Correct'.center(20)
-    for r in results:
-        print '{0}|{1}|{2}|{3}'.format(str(r[0]).center(10),str(r[1]).center(10),str(r[2]).center(10),str(r[3]).center(20))
+    print 'Fold'.center(10) + '|' + '# Correct'.center(10) + "|" + 'Total'.center(10) + "|" + '% Correct'.center(10) + "|" + '% Nodes Correct'.center(20)
+    for i,r in enumerate(results):
+        print '{0}|{1}|{2}|{3}|{4}'.format(str(i).center(10),str(r[0]).center(10),str(r[1]).center(10),str(r[2]).center(10),str(r[3]).center(20))
 
 def create_holdouts(filename, num_splits):
     print "Creating testing data"
