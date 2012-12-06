@@ -9,7 +9,7 @@ class Graph:
         self.num_sites = len(sites)
         self.num_nodes = len(sites) * 2
         print "initializing %s nodes" %(self.num_nodes)
-        self.nodes = np.empty((self.num_nodes, 0))
+        self.nodes = (np.empty((self.num_nodes, 0)),np.empty((self.num_nodes, 0)))
         print "initializing %s^2 edges" %(self.num_nodes)
         self.edges = np.empty((4,self.num_nodes, self.num_nodes))
 
@@ -20,10 +20,15 @@ class Graph:
         mu_s = mu[0]
         mu_st = mu[1:]
         print "Learning theta_s"
-        theta_s = np.matrix(np.zeros((1, self.num_nodes)))
+        theta_s0 = np.matrix(np.zeros((1, self.num_nodes)))
+        theta_s1 = np.matrix(np.zeros((1, self.num_nodes)))
+        theta_s = (theta_s0, theta_s1)
         for i in range(0,mu_s.shape[1]):
             if mu_s[0,i] > 0:
-                theta_s[0,i] = math.log(mu_s[0,i])
+                theta_s0[0,i] = math.log(mu_s[0,i])
+            if mu_s[0,i] < 1:
+                theta_s1[0,i] = math.log(1 - mu_s[0,i])
+
         s = (self.num_nodes, self.num_nodes)
         theta_st = [np.matrix(np.zeros(s)),np.matrix(np.zeros(s)),np.matrix(np.zeros(s)),np.matrix(np.zeros(s))]
         denom00 = (1 - mu_s.T) * (1 - mu_s)
@@ -38,7 +43,8 @@ class Graph:
                 for j in range(self.num_nodes):
                     if mu_st[k][i,j] > 0 and denom[k][i,j] > 0:
                         theta_st[k][i,j] = math.log(mu_st[k][i,j]/denom[k][i,j])
-        print 'theta_s:\n{0}\n\n'.format(theta_s)
+        print 'theta_s0:\n{0}\n\n'.format(theta_s0)
+        print 'theta_s1:\n{0}\n\n'.format(theta_s1)
         print 'theta_st11:\n{0}\n\n'.format(theta_st[3])
         print 'theta_st10:\n{0}\n\n'.format(theta_st[2])
         print 'theta_st01:\n{0}\n\n'.format(theta_st[1])
@@ -120,12 +126,11 @@ class Graph:
         Calculates the probability of a given state using the exponential
         family parameterization learned from a prior dataset. Note that
         we are assuming A(theta) = 0 (i.e., the graph is triangulated).
-        Also note the similarity to calc_mu_quadrant.
+        Also note the similarity to calc_mu.
         """
-        sum_s = np.sum(state * self.nodes.T)
         n1 = state[0,0:self.num_sites]
         n2 = state[0,self.num_sites:]
-        mu_s = np.matrix(np.zeros((1,self.num_nodes)))
+        mu_s = state
         s = np.zeros((self.num_nodes, self.num_nodes))
         mu_st11 = np.matrix(s)
         mu_st10 = np.matrix(s)
@@ -137,7 +142,6 @@ class Graph:
         This is the upper-right quadrant.
         """	
         upright = self.calc_mu_quadrant(n1, n2)
-        mu_s[0,0:self.num_sites] += n1
         mu_st11[0:self.num_sites,self.num_sites:] += upright[3] # nn11
         mu_st10[0:self.num_sites,self.num_sites:] += upright[2] # nn10
         mu_st01[0:self.num_sites,self.num_sites:] += upright[1] # nn01
@@ -147,36 +151,40 @@ class Graph:
         This is the lower-right quadrant.
         """
         lowright = self.calc_mu_quadrant(n2, n2)
-        mu_s[0,self.num_sites:] += n2
         mu_st11[self.num_sites:,self.num_sites:] += lowright[3] # nn11
         mu_st10[self.num_sites:,self.num_sites:] += lowright[2] # nn10
         mu_st01[self.num_sites:,self.num_sites:] += lowright[1] # nn01
         mu_st00[self.num_sites:,self.num_sites:] += lowright[0] # nn00
-
+        """
+        We only want the upper triangle, since otherwise we will double
+        count the n'->n' edges.
+        """
         mu_st11 = np.triu(mu_st11)
         mu_st10 = np.triu(mu_st10)
         mu_st01 = np.triu(mu_st01)
         mu_st00 = np.triu(mu_st00)
-
-        sum_s = np.sum(mu_s.T * self.nodes)
-        sum_s = np.sum(mu_s.T * -1 * (self.nodes - np.ones((1,self.num_nodes)) ) 
-
+        """
+        Sum(x_s)
+        """
+        sum_s = mu_s * self.nodes[0].T
+        sum_s += (mu_s - 1) * -1 * self.nodes[1].T
+        sum_s = sum_s[0,0]
+        """
+        Sum(x_s,x_t)
+        """
         sum_st00 = np.sum(np.multiply(mu_st00, self.edges[0]))
         sum_st01 = np.sum(np.multiply(mu_st01, self.edges[1]))
         sum_st10 = np.sum(np.multiply(mu_st10, self.edges[2]))
         sum_st11 = np.sum(np.multiply(mu_st11, self.edges[3]))
         result = sum_s + sum_st00 + sum_st01 + sum_st10 + sum_st11
-        #print "S: {0} ST[00]: {1} ST[01]: {2} ST[10]: {3} ST[11]: {4}".format(sum_s, sum_st00, sum_st01, sum_st10, sum_st11)
+        print "S: {0} ST[00]: {1} ST[01]: {2} ST[10]: {3} ST[11]: {4}".format(sum_s, sum_st00, sum_st01, sum_st10, sum_st11)
 
-        print state
-        print result
-        #print "Prob: {0}".format(math.exp(result))
+        print "Prob: {0}".format(math.exp(result))
         #return math.exp(sum_s + sum_st00 + sum_st01 + sum_st10 + sum_st11)
         #
         #pseudo-likelihood
         if result < 0.000001:
             return 0
-        print math.exp(result)
         return result
 
     def predict(self, current_nodes):
