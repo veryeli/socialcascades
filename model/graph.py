@@ -64,7 +64,7 @@ class Graph:
                 """
                 Calculate the edges from n->n'.
                 This is the upper-right quadrant.
-                """
+                """	
                 n1 = m1[i]
                 n2 = m2[i]
                 upright = self.calc_mu_quadrant(n1, n2)
@@ -95,6 +95,7 @@ class Graph:
         mu_st01 /= total_samples
         mu_st00 /= total_samples
         print "Mu_s:\n{0}".format(mu_s)
+        print range(3), range(3)
         print "Mu_st11:\n{0}\n\n".format(mu_st11)
         print "Mu_st10:\n{0}\n\n".format(mu_st10)
         print "Mu_st01:\n{0}\n\n".format(mu_st01)
@@ -107,7 +108,8 @@ class Graph:
         np.fill_diagonal(nn11, 0)
         nn10 = n1.T * np.matrix(np.ones(n1.shape[1])) - nn11
         np.fill_diagonal(nn10, 0)
-        nn01 = nn10.T
+        nn01 =  n2.T * np.matrix(np.ones(n1.shape[1])) - nn11
+        np.fill_diagonal(nn01, 0)
         s1 = (n1.shape[1],n1.shape[1])
         nn00 = np.matrix(np.ones(s1)) - nn11 - nn10 - nn01
         np.fill_diagonal(nn00, 0)
@@ -121,28 +123,60 @@ class Graph:
         Also note the similarity to calc_mu_quadrant.
         """
         sum_s = np.sum(state * self.nodes.T)
-        
-        nn11 = state.T * state
-        np.fill_diagonal(nn11, 0)
-        nn10 = state.T * np.matrix(np.ones(state.shape[1])) - nn11
-        np.fill_diagonal(nn10, 0)
-        nn01 = nn10.T
-        s = (state.shape[1],state.shape[1])
-        nn00 = np.matrix(np.ones(s)) - nn11 - nn10 - nn01
-        np.fill_diagonal(nn00, 0)
+        n1 = state[0,0:self.num_sites]
+        n2 = state[0,self.num_sites:]
+        mu_s = np.matrix(np.zeros((1,self.num_nodes)))
+        s = np.zeros((self.num_nodes, self.num_nodes))
+        mu_st11 = np.matrix(s)
+        mu_st10 = np.matrix(s)
+        mu_st01 = np.matrix(s)
+        mu_st00 = np.matrix(s)
 
-        sum_st00 = np.sum(np.multiply(nn00, self.edges[0]))
-        sum_st01 = np.sum(np.multiply(nn01, self.edges[1]))
-        sum_st10 = np.sum(np.multiply(nn10, self.edges[2]))
-        sum_st11 = np.sum(np.multiply(nn11, self.edges[3]))
+        """
+        Calculate the edges from n->n'.
+        This is the upper-right quadrant.
+        """	
+        upright = self.calc_mu_quadrant(n1, n2)
+        mu_s[0,0:self.num_sites] += n1
+        mu_st11[0:self.num_sites,self.num_sites:] += upright[3] # nn11
+        mu_st10[0:self.num_sites,self.num_sites:] += upright[2] # nn10
+        mu_st01[0:self.num_sites,self.num_sites:] += upright[1] # nn01
+        mu_st00[0:self.num_sites,self.num_sites:] += upright[0] # nn00
+        """
+        Calculate the edges from n'->n'.
+        This is the lower-right quadrant.
+        """
+        lowright = self.calc_mu_quadrant(n2, n2)
+        mu_s[0,self.num_sites:] += n2
+        mu_st11[self.num_sites:,self.num_sites:] += lowright[3] # nn11
+        mu_st10[self.num_sites:,self.num_sites:] += lowright[2] # nn10
+        mu_st01[self.num_sites:,self.num_sites:] += lowright[1] # nn01
+        mu_st00[self.num_sites:,self.num_sites:] += lowright[0] # nn00
+
+        mu_st11 = np.triu(mu_st11)
+        mu_st10 = np.triu(mu_st10)
+        mu_st01 = np.triu(mu_st01)
+        mu_st00 = np.triu(mu_st00)
+
+        sum_s = np.sum(mu_s.T * self.nodes)
+        sum_s = np.sum(mu_s.T * -1 * (self.nodes - np.ones((1,self.num_nodes)) ) 
+
+        sum_st00 = np.sum(np.multiply(mu_st00, self.edges[0]))
+        sum_st01 = np.sum(np.multiply(mu_st01, self.edges[1]))
+        sum_st10 = np.sum(np.multiply(mu_st10, self.edges[2]))
+        sum_st11 = np.sum(np.multiply(mu_st11, self.edges[3]))
         result = sum_s + sum_st00 + sum_st01 + sum_st10 + sum_st11
-        print "S: {0} ST[00]: {1} ST[01]: {2} ST[10]: {3} ST[11]: {4}".format(sum_s, sum_st00, sum_st01, sum_st10, sum_st11)
+        #print "S: {0} ST[00]: {1} ST[01]: {2} ST[10]: {3} ST[11]: {4}".format(sum_s, sum_st00, sum_st01, sum_st10, sum_st11)
+
+        print state
+        print result
         #print "Prob: {0}".format(math.exp(result))
         #return math.exp(sum_s + sum_st00 + sum_st01 + sum_st10 + sum_st11)
         #
         #pseudo-likelihood
         if result < 0.000001:
             return 0
+        print math.exp(result)
         return result
 
     def predict(self, current_nodes):
