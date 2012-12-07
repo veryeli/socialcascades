@@ -7,7 +7,7 @@
 \def\I{\mathbb{I}}
 \usetikzlibrary{arrows,automata}
 
-\title{Infectious Knowledge in a Collaborative News Site}
+\title{Infectious Knowledge in Collaborative Social Sites}
 
 
 \author{
@@ -60,16 +60,70 @@ In \cite{twitter_trend}, the authors identify \textit{bursty} keywords that sudd
 As internet domains are fully connected, and inference over fully connected graphs is intractable, it is important to 
 % OUR STORY; Learning social networks is important. Past att
 \section{Learning Structure}
+In this section, we present our approach to learning the structure of influence graphs in collaborative sites. We first present an overview of the general problem, followed by our approach to learning structure, and finally validate our approach by learning structure graphs for two real-world datasets, \textit{reddit} and \textit{StackExchange}.
 
-\subsection{Structure Learning}
-\subsection{Problem Structure}
+\subsection{Challenges for Collaborative Sites}
+Learning graphical model structure is a particularly difficult task for collaborative sites. Each subsite forms a node in the network, and memes can potentially between any two subsites that share at least one user in common. Typically in social networks, we expect the percentage of mutual friends to be relatively low and edges exist simply as binary friend-or-not connections. However, in collaborative sites with thousands of users, it is reasonable to expect that every subsite shares at least one user in common. A naive approach would thus result in a fully connected graph, which is undesirable as it reveals little insight and may make certain tasks intractable.
 
-\subsection{Inference Problem}
+\subsection{Approximate Structure Learning Algorithm}
+Since it is possible for a meme to spread between any two subsites, any structure learning algorithm that yields a less-than-fully-connected graph is learning an approximate structure. As noted previously, an approximate structure may be desirable for gaining insights and reducing computational requirements. We next present our approximate structure learning algorithm for collaborative sites.
+
+We first begin by defining an \textit{adjency matrix}, $\mathcal{A}$, over subsites. For each pair, $(s,t) \in \mathcal{A}$, of subsites, we mine the percentage of \textit{active} users that overlap in both $s$ and $t$. We define a user as \textit{active} if they have posted at least once on both subsites\footnote{Note that mining inactive users would be infeasible since most collaborative sites have user subsite subscriptions as private.}:
+
+$$
+\begin{array}{lll}
+\mathcal{A}[s,t] &=& \sum_{\forall u \in \mathcal{U}}\dfrac{a(u)}{min(|\mathcal{U}^s|,|\mathcal{U}^t|)}\\
+a(u) &=& \begin{cases}1&u \in P_s\text{ and }u \in P_t\\0 &\text{otherwise}\end{cases}
+\end{array}
+$$
+
+Where $\mathcal{U}$ is the set of users and $P_i$ is the set of posts in subsite $i$.
+
+Rather than focusing on binary co-occurrence edges, our algorithm assesses the strengths of user overlap between two subsites and removes edges that are below a user-specified threshold. We define the relative strength matrix, $\mathcal{A}^*$:
+
+$$
+\begin{array}{lll}
+\mathcal{A}^*[s,t] &=& \dfrac{\mathcal{A}[s,t] - \mu(\mathcal{A})}{\sigma(\mathcal{A})}\\
+\end{array}
+$$
+
+Where $\mu$ and $\sigma$ are the mean and standard deviation, respectively. Finally, we define the weighted edge matrix, $\mathcal{E}$:
+
+$$
+\begin{array}{lll}
+\mathcal{E}[s,t] &=& \begin{cases}\mathcal{A}^*[s,t] & \text{if }\mathcal{A}^*[s,t] \geq \gamma \\0 &\text{otherwise}\end{cases}\\
+\end{array}
+$$
+
+Where $\gamma$ is the user-specified strength threshold.
+
+The resulting graph, $\mathcal{G} = (\mathcal{S},\mathcal{E})$, captures the most likely sources of influence for each node. To predict meme spreads, one could then convert $\mathcal{G}$ to a dynamic graphical model, $\mathcal{G}^*$, that captures the transition from $\mathcal{G}$ to $\mathcal{G'}$:
+
+$$
+\begin{array}{lll}
+\mathcal{G}^* &=& (\mathcal{S}^*,\mathcal{E}^*)\\
+\mathcal{S}^* &=& S \cup S'\\
+\mathcal{E}^*[s,t] = &=& \begin{cases}1 & \text{if } s \in \mathcal{S}\text{, }t \in \mathcal{S'} \text{, and } \mathcal{E}[s,t] > 0\\
+                                      1 & \text{if } s \in \mathcal{S'}\text{, }t \in \mathcal{S'} \text{, and } \mathcal{E}[s,t] > 0\\
+                                      0 & \text{otherwise}\end{cases}\\
+\end{array}
+$$
+
+Queries to our dynamic graph will always be performed with the nodes in $\mathcal{G}$ being observed, thus connecting them would not affect the MAP inference for nodes in $\mathcal{G'}$. One important point is that while the weights inferred by our algorithm could represent final weights in a graphical model, it is not clear that doing so would produce high accuracy.
 
 \subsection{Datasets}
+To validate our approach, we mined active user adjacency matrices for three real-world collaborative sites: \textit{reddit}, \textit{StackExchange}, and \textit{SomethingAwful}. The results for each site are presented next.
 
-\subsubsection{Reddit}
+\subsubsection{reddit}
+\textit{reddit} is a social news site where each subsite\footnote{reddit subsites are called subreddits.} represents a different news topic. By default, all users are subscribed to a generic set of subsites such as \textit{politics} and \textit{humor}. The overlap among these default subsites is very high resulting in very little signal in the adjacency matrix; it is also worth noting that these subsites are more likely to be the final destination of memes, given that they are less niche than the non-default subsites. Consequently, we first removed all default subsites from our dataset. To conform to our time constraints and maximize the amount of insight we could draw, we then limited the remaining non-default subsites to only the top 25. The resulting graph generated by our structure learning algorithm is shown in Figure \ref{fig:reddit}.
+
+Two interesting properties of the graph immediately stand out. First, the explicit-content subreddits, \textit{nsfw}, \textit{sex}, and \textit{gonewild}, are clustered together, indicating that memes on these subreddits are not likely to spread to the rest of the network and memes within the cluster will quickly infect the remaining nodes. Conversely, the marijuana-oriented subreddit, \textit{trees}, is a super-node that appears to exert influence on nearly every node and vice-versa. Intuitively, we may thus hypothesize that the users of \textit{trees} are very influential on reddit and would thus expect to see memes spread from and to \textit{trees} rapidly.
+
 \subsubsection{StackExchange}
+\textit{StackExchange} (SE) is a collaborative question-answer site where each subsite represents a different question topic. A majority of subsites focus on technical topics such as \textit{android} and \textit{security}, though non-technical subsites exist (e.g., \textit{cooking}). Memes in SE are more likely to take the form of rising topics of interest, such as the popularity of iPhone games or Ruby on Rails, rather than cultural topics like on reddit. Unlike most collaborative sites, SE user subscription data is publicly available. We therefore used the adjacency matrix of all users to build our graph. The resulting graph for SE is shown in Figure \ref{fig:stackexchange}.
+
+Perhaps counter-intuitively, the \textit{stackoverflow} subsite has two orders of magnitude more overall users than other sites, but exerts no influence on the network. This may be a result of the other subsites being relatively unknown but having a strong sub-culture of shared users. Two high-influence pseudo-clusters appear between less technical and strictly technical sites in the upper-left and lower-right, respectively. Thus, we would expect that localized memes would be frequent among these pseudo-clusters.
+
 \subsubsection{SomethingAwful}
 
 \subsection{Experiments}
