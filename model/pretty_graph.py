@@ -52,7 +52,7 @@ def graph_adj_matrix(m, names, outfile):
 				m[i][j] = 0
 			else:
 				m[i][j] = m[i][j] / min(counts[i], counts[j])
-	stdev = np.std(m)
+	stdev = np.std(m) / 8
 	mean = np.mean(m)
 	
 
@@ -87,7 +87,7 @@ def graph_adj_matrix(m, names, outfile):
 				magnitude = magnitude / stdev
 
 				magnitude = int(round(min(15,max(0,magnitude))))
-				#magnitude = min(int(magnitude) - 5, 15)
+				
 				print magnitude
 				if magnitude < 1:
 					magnitude = 0
@@ -96,7 +96,7 @@ def graph_adj_matrix(m, names, outfile):
 				for n in range(magnitude/4):
 					color +=  rainbow[magnitude-1] + ':'
 				color=color[:-1]
-				if magnitude > 0:
+				if magnitude > 5:
 					out.write("%s -- %s [color=\"%s\"];\n" %(names[i], names[j], color))
 	out.write('}')
 
