@@ -35,29 +35,35 @@ In recent years, the attention paid to cascading information in social networks 
 
 \section{Introduction}
 \label{intro}
-Social cascades capture the concept of new ideas, or \textit{memes}, spreading across influence networks and infecting subcultures. Cascade theory has applications to several areas, including epidemiology, graph theory, machine learning, and marketing. In this project, we examine the dynamics of information spread across sub-communities with overlapping networks in several real-world domains: the social news site \textit{reddit}, a collection of blogs and mainstream media \cite{memetracker}, and the question-answer network \textit{StackExchange}. Our goal is to capture the flow of memes by learning a graphical model for each domain. We learn a graphical model describing the transition between timesteps, effectively capturing how the memes cascade through the network.
+Social cascades capture the concept of new ideas, or \textit{memes}, spreading across influence networks and infecting subcultures. Cascade theory has applications to several areas, including epidemiology, graph theory, machine learning, and marketing. In this paper, we examine the dynamics of information-spread across sub-communities with overlapping networks in several real-world domains: the social news site \textit{reddit}, a collection of blogs and mainstream media \cite{memetracker}, and the question-answer network \textit{StackExchange}. Our goal is to capture the flow of memes by learning a graphical model for each domain. We present approaches for inferring both the structure and weights of such models.
 
-Information online travels across networks in a variety of configurations, and it is easy to see information spreading across them. Past work such as \c \c and \c all illustrate examples of phrases or terms spreading rapidly across networks.
-Our work is an extension of the work in \cite{netinf}, in which the authors learn the structure of a graph from observing cascades. These authors learn structure, while ee assume the graph is fully connected, and predict the state of a cascade given the inferred weights on the graph. 
+Information online travels across networks in a variety of configurations, and it is easy to see information spreading across them. 
+Our work is an extension of the NetInf work \cite{netinf}, in which the authors learn the structure of a graph from observing cascades. Where as the NetInf 
 
-In this paper, we explore how modeling this mechanism as a timeseries can help us both to predict future topics and to discover the structure of latent communities. . Section \ref{data} explains the structure of the data and the domains from which they are drawn. Section \ref{cascades} delves into past work on cascades in networks. Sections \ref{experiments} and \ref{results} explain the experiments and results respectively, and Section \ref{discussion} explores the broader implications of our results and some future work. 
+In this paper, we explore how modeling this mechanism as a timeseries can help us both to predict future topics and to discover the structure of latent communities.
+
+The remainder of this paper is organized as follows. Section \ref{sec:background} presents an overview of previous work on cascades. Section \ref{sec:structure} presents our algorithm for approximate structure learning in collaborative sites. Section \ref{sec:prediction} details the results of using graphical models to predict social cascades. Finally, section \ref{sec:conclusions} discusses potential future work and concludes.
 
 \section{Background}
+\label{sec:background}
+The rise of online social media in recent years has created numerous opportunities for social cascade researchers. In this section, we discuss some of the work performed on cascades in social media, compare their applicability to collaborative sites, and differentiate them from our own approach.
+
+\subsection{Collaborative Sites}
+A \textit{collaborative site}, in this paper, is defined as any site which has a single overall userbase and multiple subsites. Each user in the site is subscribed to at least one subsite and can optionally choose to subscribe to as many of the subsites as they like. Examples of such sites may include social news sites, question-answer sites, and discussion forums. Note that traditional friendship social networks are not valid collaborative sites, as users must be given permission to \textit{friend} other users. Similarly, microblogging sites do not qualify, as users are not able to comment directly on another user's feed.
 
 \subsection{Social Cascades}
-\label{cascades}
-
 In \cite{info_contag} the authors use the explicit struture of networks - observing following and friendship relationships in order to explore the effect of actual, instead of inferred, network structure on information cascades. They observe that the popularity of stories peaks with an age of about one day, and then subsides. 
 
-A unique aspect of open networks like reddit, digg, publications, \&c is that it is possible for information to latently travel quicly, as opposed toin closed, action oriented networks like the one described in \cite{viral_dynamics}, where information, which must individually be spread from one email to another, peters out quickly.
+A unique aspect of open networks like reddit\footnote{http://reddit.com} and digg\footnote{http://digg.com} is that it is possible for information to latently travel quickly, as opposed to in closed, action oriented networks like the one described in \cite{viral_dynamics}, where information, which must individually be spread from one email to another, peters out quickly.
 
-In \cite{twitter_trend}, the authors identify \textit{bursty} keywords that suddently appear, and attempt to align them with trends - entire topics that are becoming more popular. They do this by analyzing new bursts in the queue. One thing we can do in this paper is look at each sub as a queue and see if bursts in one are followed by bursts in another.
+In \cite{twitter_trend}, the authors identify \textit{``bursty''} keywords that suddently appear, and attempt to align them with trends \dash entire topics that are becoming more popular. In collaborative sites, however, we are interested in both the rise of such topics and the path they travel through the network of subsites.
 
 \subsection{Structure Learning}
-
+Inferring networks of influence has been studied in a variety of contexts. Contagion networks have been used \cite{contagion} to model the spread of disease throughout a social network. 
 As internet domains are fully connected, and inference over fully connected graphs is intractable, it is important to 
 % OUR STORY; Learning social networks is important. Past att
 \section{Learning Structure}
+\label{sec:structure}
 In this section, we present our approach to learning the structure of influence graphs in collaborative sites. We first present an overview of the general problem, followed by our approach to learning structure, and finally validate our approach by learning structure graphs for two real-world datasets, \textit{reddit} and \textit{StackExchange}.
 
 \subsection{Challenges for Collaborative Sites}
@@ -139,6 +145,7 @@ Perhaps counter-intuitively, the \textit{stackoverflow} subsite has two orders o
 
 
 \section{Predicting Cascades}
+\label{sec:prediction}
 
 The second task is a difficult inference problem, detecting cascades in networks of sites. This task has two components - learning the connections between the sites and using the strengths of these connections to predict the sites of future infections. In \cite{netinf}, the authors learn the strength of connections between sites to visualize and explore the data, while we extend this research by using connections to predict future data.
 

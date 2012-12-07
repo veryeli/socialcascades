@@ -48,7 +48,7 @@ class Models(object):
 
     def split(self):
         for parser in self.parsers:
-            parser.split(self.stepsize, self.start_year, self.start_month)
+            parser.split_proper(self.stepsize, self.start_year, self.start_month)
         self.clean_splits('data/ngrams/')
 
     def split_tags(self):
@@ -93,6 +93,9 @@ class Pradeep(object):
         return set(user_ids)
 
     def split(self, stepsize=1, start_year = 2007, start_month = 1):
+        """
+        A broken split that saves on memory by skipping out-of-order posts
+        """
         print 'Starting parse of {0}'.format(self.posts)
         context = ET.iterparse(self.posts, events=("start", "end"))
         context = iter(context)
@@ -121,6 +124,47 @@ class Pradeep(object):
                 for bigram in bigrams:
                     ngrams.append(bigram)
                 root.clear()
+
+    def split_proper(self, stepsize=1, start_year = 2007, start_month = 1):
+        """
+        A split method that holds all text in memory until the end.
+        """
+        print 'Starting parse of {0}'.format(self.posts)
+        context = ET.iterparse(self.posts, events=("start", "end"))
+        context = iter(context)
+        event, root = context.next()
+        ngrams = [[] for x in range(self.split_idx(start_year, start_month, datetime.datetime(2012, 1, 1)))]
+        for event, elem in context:
+            if event == "end" and elem.tag == "row":
+                text = ''.join(BeautifulSoup(elem.attrib['Body']).findAll(text=True))
+                date = dateutil.parser.parse(elem.attrib['CreationDate'])
+                sidx = self.split_idx(start_year, start_month, date)
+                print '\t{0}\tsidx:{1}'.format(date, sidx)
+                bigrams = Pradeep.bigrams(text)
+                for bigram in bigrams:
+                    ngrams[sidx].append(bigram)
+                root.clear()
+        
+        print 'Finished collecting n-grams. Processing...'
+        for i,n in enumerate(ngrams):
+            date = self.idx_to_date(start_year, start_month, i)
+            print '{0}/{1}'.format(date.month, date.year)
+            if len(n) == 0:
+                print 'No elements. Skipping...'
+                continue
+            print '{0} items'.format(len(n))
+            print '\tCalculating collocations'
+            collocations = Pradeep.collocations_from_tokens(n, self.split_ngrams, self.ngram_min_occurs)
+            print '\tSaving results'
+            self.save_ngrams(collocations, date)
+        ngrams = None
+
+    def split_idx(self, start_year, start_month, date):
+        return (date.year - start_year)*12 + start_month - date.month
+
+    def idx_to_date(self, start_year, start_month, idx):
+        print "idx: {0} yr: {1} month: {2}".format(idx, start_year + (idx + start_month) / 12, start_month + (idx % 12))
+        return datetime.datetime(start_year + (idx + start_month) / 12, start_month + (idx % 12), 1)
 
     def split_tags(self, stepsize=1):
         print 'Starting parse of {0}'.format(self.posts)
