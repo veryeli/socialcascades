@@ -1,16 +1,42 @@
-import graph
-import numpy 
-from get_samples import get_train_samples
+import sys
+import os
+import xml.etree.cElementTree as ET
+from bs4 import BeautifulSoup
+import nltk
+import datetime
+import dateutil.parser
+from dateutil.relativedelta import relativedelta
+import pickle
+import numpy as np
+import operator
+from get_samples import get_samples
 
-def test(graph, testfile, steps):
-	accuracy = []
-	#we're going to look for accuracy 1, 2, ... ,steps timesteps out
-	num_examples = 0
-	for example in get_train_samples(test_file, steps):
-		accuracy.append(graph.predict(example, steps))
-	return get_stats(accuracy)
+def create_counts(filename):
+    data = pickle.load(open(f,'rb'))
+    counts = {}
+    for site in data.keys():
+        for bigram in data[site]:
+            if not bigram in counts:
+                counts[bigram] = 0
+            counts[bigram] += 1
+    #Debug
+    sorted_bigrams = sorted(counts.iteritems(), key=operator.itemgetter(1))
+    for i in range(50):
+        print '{0}: {1}'.format(sorted_bigrams[i], counts[sorted_bigrams[i]])
+    return counts
 
-def get_stats(accuracy):
-	num_trials = len(accuracy)
-	pair_indexer = {0:(0,0), 1:(0,1), 2:(1,0), 3:(1,1)}
-	pairs = {(0,0):self.ioo,(0,1):self.ioi,(1,0):self.iio,(1,1):self.iii}
+
+# site_ids = pickle.load(open('data/site_ids.data', "rb"))
+# files = [x for x in os.listdir('data/users') if not x.startswith('.')]
+# for f in files:
+#     data = pickle.load(open(f,'rb'))
+#     print '{0}: {1} sites'.format(f, len(data))
+
+# create_counts('data/ngrams/2010_11.ngrams')
+
+if __name__ == "__main__":
+    total = 0
+    print 'here'
+    for sample in get_samples('data/infections_daily_test4.csv'):
+        total += sample.shape[0] - 1
+        print total

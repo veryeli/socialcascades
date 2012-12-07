@@ -96,8 +96,6 @@ class Graph:
                 mu_st10[self.num_sites:,self.num_sites:] += lowright[2] # nn10
                 mu_st01[self.num_sites:,self.num_sites:] += lowright[1] # nn01
                 mu_st00[self.num_sites:,self.num_sites:] += lowright[0] # nn00
-            if total_samples > 5000:
-                break
         mu_st11 = np.triu(mu_st11)
         mu_st10 = np.triu(mu_st10)
         mu_st01 = np.triu(mu_st01)
@@ -191,7 +189,7 @@ class Graph:
         sum_st11 = np.sum(np.multiply(mu_st11, self.edges[3]))
         result = sum_s + sum_st00 + sum_st01 + sum_st10 + sum_st11
         #print "S: {0} ST[00]: {1} ST[01]: {2} ST[10]: {3} ST[11]: {4}".format(sum_s, sum_st00, sum_st01, sum_st10, sum_st11)
-        print "Prob: {0}".format(result)
+        #print "Prob: {0}".format(result)
         #pseudo-likelihood
         return result
 
@@ -216,7 +214,7 @@ class Graph:
             p1 = self.prob(state)
             if p0 > p1:
                 state[0,nidx] = 0
-        print 'Final hill-clibming prob: {0}'.format(self.prob(state))     #math.exp(self.prob(state)))
+        # print 'Final hill-clibming prob: {0}'.format(self.prob(state))     #math.exp(self.prob(state)))
         return state[0,self.num_sites:]
 
     def test(self, test_file):
@@ -229,16 +227,16 @@ class Graph:
         nodewise_correct = 0
         for sample in get_samples(test_file):
             print total
-            for i in range(0, 20):#sample.shape[0]-1):
+            for i in range(0, sample.shape[0]-1):
                 current_nodes = sample[i,0:self.num_sites]
                 next = sample[i+1,0:self.num_sites]
                 predicted = self.predict(current_nodes)
                 true_state = np.matrix(np.zeros((self.num_nodes)))
                 true_state[0,:self.num_sites] = current_nodes
                 true_state[0,self.num_sites:] = next
-                print "Ground: {0}".format(true_state)
-                print "Ground prob: {0}".format(self.prob(true_state))
-                print "Next: {0} Predicted: {1}".format(next, predicted)
+                # print "Ground: {0}".format(true_state)
+                # print "Ground prob: {0}".format(self.prob(true_state))
+                # print "Next: {0} Predicted: {1}".format(next, predicted)
                 if (next == predicted).all():
                     correct += 1
                     nodewise_correct += 1
@@ -247,10 +245,13 @@ class Graph:
                         if next[0,j] == predicted[0,j]:
                             nodewise_correct += 1 / float(self.num_sites)
                 total += 1
-                if total > 1:
-                    break
-            break
+            print test_file
+            pretty_print((correct, total, correct / float(total), nodewise_correct / float(total)))
         return (correct, total, correct / float(total), nodewise_correct / float(total))
+
+def pretty_print(r):
+    print '# Correct'.center(10) + "|" + 'Total'.center(10) + "|" + '% Correct'.center(10) + "|" + '% Nodes Correct'.center(20)
+    print '{0}|{1}|{2}|{3}'.format(str(r[0]).center(10),str(r[1]).center(10),str(r[2]).center(10),str(r[3]).center(20))
 
 
 if __name__ == "__main__":
