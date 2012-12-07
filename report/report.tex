@@ -71,10 +71,9 @@ Since it is possible for a meme to spread between any two subsites, any structur
 We first begin by defining an \textit{adjency matrix}, $\mathcal{A}$, over subsites. For each pair, $(s,t) \in \mathcal{A}$, of subsites, we mine the percentage of \textit{active} users that overlap in both $s$ and $t$. We define a user as \textit{active} if they have posted at least once on both subsites\footnote{Note that mining inactive users would be infeasible since most collaborative sites have user subsite subscriptions as private.}:
 
 $$
-\begin{array}{lll}
-\mathcal{A}[s,t] &=& \sum_{\forall u \in \mathcal{U}}\dfrac{a(u)}{min(|\mathcal{U}^s|,|\mathcal{U}^t|)}\\
-a(u) &=& \begin{cases}1&u \in P_s\text{ and }u \in P_t\\0 &\text{otherwise}\end{cases}
-\end{array}
+\mathcal{A}[s,t] = \sum_{\forall u \in \mathcal{U}}\dfrac{a(u)}{min(|\mathcal{U}^s|,|\mathcal{U}^t|)}$$
+$$
+a(u) = \begin{cases}1&u \in P_s\text{ and }u \in P_t\\0 &\text{otherwise}\end{cases}
 $$
 
 Where $\mathcal{U}$ is the set of users and $P_i$ is the set of posts in subsite $i$.
@@ -153,7 +152,7 @@ We model this domain as an unfolding Markov Chain, in which at each timestep, no
 
 As infections spread over continuous time but our model involves only discrete timesteps, our model must account for the fact that newly infected nodes may cross-contaminate. Towards this end, we connect all of the nodes in the second timestep.
 
-The number of nodes in both timesteps $|V|=2|S|$, with $S$ being the set of all sites. The number of edges $|E=\frac{3}{2}|S|^2 - S$ - $S^2$ captures influence between each site at time $t$ and each site at time $t+1$, and between each site at time $t+1$ with every other such site.
+The number of nodes in both timesteps $|V|=2|S|$, with $S$ being the set of all sites. The number of edges $|E|=\frac{3}{2}|S|^2 - S$ - $S^2$ captures influence between each site at time $t$ and each site at time $t+1$, and between each site at time $t+1$ with every other such site.
 
 $$\begin{tikzpicture}[-,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
                     semithick]
