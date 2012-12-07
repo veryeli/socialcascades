@@ -1,6 +1,6 @@
 import numpy as np
 import sys
-def get_samples(filename):
+def get_samples_temp(filename):
     with open(filename) as f:
         rows = []
         for line in f:
@@ -13,7 +13,7 @@ def get_samples(filename):
                 row = [int(x) for x in tokens]
                 rows.append(row)
 
-def get_samples_netinf(filename):
+def get_samples(filename):
     with open(filename) as f:
         rows = []
         prev = []
@@ -21,6 +21,7 @@ def get_samples_netinf(filename):
             if len(line.strip()) == 0:
                 arr = np.matrix(rows)
                 rows = []
+                prev = []
                 yield arr
             else:
                 tokens = line.split(',')
@@ -29,6 +30,7 @@ def get_samples_netinf(filename):
                     for i,n in enumerate(prev):
                         if prev[i] == 1:
                             row[i] = 1
+                prev = row
                 rows.append(row)
 
 def get_train_samples(filename, steps):

@@ -234,9 +234,9 @@ class Graph:
                 true_state = np.matrix(np.zeros((self.num_nodes)))
                 true_state[0,:self.num_sites] = current_nodes
                 true_state[0,self.num_sites:] = next
-                # print "Ground: {0}".format(true_state)
+                #print "Ground: {0}".format(true_state)
                 # print "Ground prob: {0}".format(self.prob(true_state))
-                # print "Next: {0} Predicted: {1}".format(next, predicted)
+                #print "Next: {0} Predicted: {1}".format(next, predicted)
                 if (next == predicted).all():
                     correct += 1
                     nodewise_correct += 1
