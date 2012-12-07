@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex report"] 1354914202 "report.aux" "report.bbl" "report" 1354914203
+["bibtex report"] 1354914202 "report.aux" "report.bbl" "report" 1354917501
   "/usr/local/texlive/2012/texmf-dist/bibtex/bst/base/plain.bst" 1292289607 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "report.aux" 1354914203 825 0219aa700596726d1cb137e5dea28ebd ""
+  "report.aux" 1354915860 825 0219aa700596726d1cb137e5dea28ebd ""
   "report.bcf" 0 -1 0 ""
-  "sources.bib" 1354674632 3219 1679ff46407f21c0196e24ad3edf1c3d ""
+  "sources.bib" 1354662940 3219 1679ff46407f21c0196e24ad3edf1c3d ""
   (generated)
   "report.bbl"
   "report.blg"
-["pdflatex"] 1354914202 "report.tex" "report.pdf" "report" 1354914203
+["pdflatex"] 1354915860 "report.tex" "report.pdf" "report" 1354917501
   "/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2012/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2012/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -156,12 +156,12 @@
   "/usr/local/texlive/2012/texmf-var/web2c/pdftex/pdflatex.fmt" 1341108725 3691572 80746d7cec090b0770bc87079bef471d ""
   "/usr/local/texlive/2012/texmf.cnf" 1341108668 572 7ea7194897937febeb63145e1c3a1f03 ""
   "/usr/local/texlive/2012/texmf/web2c/texmf.cnf" 1336865692 31299 729e216d9b945005c0d4b079c0500bc9 ""
-  "nips12submit_e.sty" 1354515376 7885 9e4f4f244c224b3cef8e31ef2149d2e0 ""
-  "reddit.pdf" 1354541640 1066057 2b1e3f7f0891809fd20b991fb5ef1680 ""
-  "report.aux" 1354914203 825 0219aa700596726d1cb137e5dea28ebd ""
-  "report.bbl" 1354914202 1793 3ea3a4e7fa2d170c467eaefdbaf4efa5 "bibtex report"
-  "report.tex" 1354914198 20526 1d6e10cc531d79fd604e007c16a59c65 ""
-  "stackexchange.pdf" 1354541709 1123276 a2c8f0b1bb87228cb83436907ce713d8 ""
+  "nips12submit_e.sty" 1354489819 7885 9e4f4f244c224b3cef8e31ef2149d2e0 ""
+  "reddit.pdf" 1354914313 1066057 2b1e3f7f0891809fd20b991fb5ef1680 ""
+  "report.aux" 1354915860 825 0219aa700596726d1cb137e5dea28ebd ""
+  "report.bbl" 1354914123 1793 3ea3a4e7fa2d170c467eaefdbaf4efa5 "bibtex report"
+  "report.tex" 1354915859 20443 135fdd4be671e46c95feb06f4588674a ""
+  "stackexchange.pdf" 1354914313 1123276 a2c8f0b1bb87228cb83436907ce713d8 ""
   (generated)
   "report.aux"
   "report.pdf"
