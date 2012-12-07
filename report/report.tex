@@ -80,6 +80,9 @@ As internet domains are fully connected, and inference over fully connected grap
 
 \section{Predicting Cascades}
 
+The second task is a difficult inference problem, detecting cascades in networks of sites. This task has two components - learning the connections between the sites and using the strengths of these connections to predict the sites of future infections. In \cite{netinf}, the authors learn the strength of connections between sites to visualize and explore the data, while we extend this research by using connections to predict future data.
+
+
 \subsection{Problem statement}
 Given nodes $\mathcal{D}$ with overlapping connections $\mathcal{C}$ via shared users, predict topic vector $v_{d,t+1}$ in document collection $d$ at time $t+1$ given the topics $V$ in all documents at time $t$?
 
@@ -93,6 +96,10 @@ Following the model in \cite{influential}, we refer to a node as \textit{contagi
 We model this domain as an unfolding Markov Chain, in which at each timestep, nodes become infected or uninfected. See the below graph, in which nodes $\{A,B,C\}$ represent the states of three sites at time $t$, and the nodes $\{A',B',C'\}$ represent the same nodes at time $t+1$.
 
 \subsection{Problem Structure}
+
+As infections spread over continuous time but our model involves only discrete timesteps, our model must account for the fact that newly infected nodes may cross-contaminate. Towards this end, we connect all of the nodes in the second timestep.
+
+The number of nodes in both timesteps $|V|=2|S|$, with $S$ being the set of all sites. The number of edges $|E=\frac{3}{2}|S|^2 - S$ - $S^2$ captures influence between each site at time $t$ and each site at time $t+1$, and between each site at time $t+1$ with every other such site.
 
 $$\begin{tikzpicture}[-,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
                     semithick]
@@ -121,6 +128,8 @@ $$\begin{tikzpicture}[-,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
 \end{tikzpicture}
 $$
 
+The number of nodes $|V|=2|S|$, with $S$ being the set of all sites. The number of edges $|E=\frac{3}{2}|S|^2$
+
 \subsection{Detecting Infections}
 \label{infections}
 
@@ -135,36 +144,43 @@ $$\I[s]=\begin{cases}1&$Infection occurs in site $s\\0& s $ is not uninfected$\e
 and
 $$\I[s,t;j,k]=\begin{cases}1&$if infection is present in site $s$ ($j=1$) and $t$ ($k=1$)$\\
 0& $otherwise$\end{cases}$$ 
-Parameters are the logs of the expectations of these indicator functions.\\
+
+Parameters are the logs of the expectations of these indicator functions.
 
 
 \subsection{Inference Problem}
 Our question “Given a cascade at time $t$, what will be the state of the cascade at time $t+1$ can be restated as the following variational problem:\\
 Given that we have learned our parameters $\theta_s$ and $\theta_st$, and that we have observed half of the nodes $X=\{x_1 ,x_2,\dots,x_n\}$ representing all of our sites at time $t$, what is the MLE assignment to the nodes $X^*=\{x^*_1 ,x^*_2,\dots,x^*_n\}$?\\
 This optimization over $2^n$ possible assignments with $n$ equal to the number of sites under examination is NP-complete.\\
-Good approximations are found by searching the parameter space. 
+
+We define the probability of an assignment $x'$ to our nodes at timestep $t+1$ given our graph $G$ and an assignment $x$ to the nodes at timestep $t  
+=
+p(x'|x,G)=p(x',x|G)/p(x)
+$. But as $p(x)$ will be constant for every assignment to $x$, we use a hillclimbing algorithm letting
+ $\hat{x}=x\cup x'$ and to optimize 
+  $$p_{\hat{\theta}}(\hat{x})
+  =\exp \left\{ \sum_{s\in V}\hat{\theta}_s(\hat{x}_s)+\sum_{s,t\in E}\hat{\theta}_{st}(\hat{x}_s,\hat{x}_t)\right\} $$
 
 
 \subsection{Datasets}
 \label{data}
 
-Our algorithm is evaluated on three datasets.
-
-Our algorithm is evaluated on three datasets: a reddit dataset scraped from reddit.com, a stack-exchange dataset, and a synthetic dataset.
+Our algorithm is evaluated on three datasets. These are the Memetracker dataset used in \cite{memetracker}, a synthetic dataset generated using the assumptions described above, and a dataset scraped from Something Awful \footnote{\texttt{forums.somethingawful.com}}
 
 \subsubsection{Memetracker}
 
-A collection of popular newssites during the campaign season of 2008. Sites are blogs and major media sources. Memes detected via the Memetracker algorithm \cite{memetracker} are designated infections.
+A collection of popular newssites during the campaign season of 2008. Sites are blogs and major media sources. Memes detected via the Memetracker algorithm \cite{memetracker} are designated infections. These experiments evaluate the 20 most popular webssites and the 40 most popular blogs.
 
-\subsubsection{SomethingAwful}
- There are 28 different sites on StackExchange. Pointwise Mutual Information \cite{pmi} identifies salient bigrams. Common bigrams detected by PMI that occur in bursts are infections.
-\subsubsection{Synthetic Dataset}
-Infections are randomly initialized and spread through sampling via MCMC from generated parameters.
+\subsubsection{Something Awful}
+ There are 48 public forums on Something Awful, and we scraped the last month of data from all of them.  The scraped data is available \texttt{cs.utexas.edu/\textasciitilde elie/records}. This data is all from 2012. To identify infections, we use Pointwise Mutual Information \cite{pmi} to identify salient bigrams. From these, we select the burstiest bigrams to be our infections, and form the infection tree.
 
 \subsection{Experiments}
 \label{experiments}
 
-We conducted three sets of experiements, on the \texttt{reddit} dataset, the \texttt{StackExchange} dataset, and the synthetic dataset. Each of these was similar, in that we used $n$-fold cross-validation to predict cascades with our algorithm, and with the edge weights learned by NetInf.
+We conducted two sets of experiements, one on each of our datasets. Each of these was similar, in that we used $n$-fold cross-validation to predict cascades with our algorithm, and with the edge weights learned by NetInf.
+
+
+Accuracy in these experiments is denoted by the percentage of nodes correctly predicted by our algorithm for timestep $t+1$ given the nodes in timestep $t$. We ran a hill-climbing algorithm for five steps to find our assignment to variables. We constructed a model with weighted edges learned by our algorithm and by the NetInf algorithm presented in \cite{netinf} to assign probabilities and find a MAP assignment to nodes.
 
 \subsection{Results}
 \label{results}
@@ -176,9 +192,9 @@ We conducted three sets of experiements, on the \texttt{reddit} dataset, the \te
 \section{Discussion and Future Work}
 \label{discussion}
 
-One of the major difficulties of researching infections if 
+One of the major difficulties of researching infections in social networks is the sparsity questions. If a site is only infected when a meme is present, the graph is very sparse, and phenomena like a user absorbing content at time $t-1$ and then reproducing it on another site at time $t+1$ are difficut or impossible to model. However, if a site becomes infected with the first occurance of a meme and stays inected forever, information about when a meme is first flaring or when it hasn't been active in the last several timesteps is lost.
 
-Important future work 
+Important future work includes formulating this problem and doing inference over it with real values. In every formulation of the problem thus far, an infection is either present or not present. Real-valued indicators of the presence of an infection will help with the problem of information loss and sparsity.
 
 \bibliography{sources}{}
 \label{refs}
