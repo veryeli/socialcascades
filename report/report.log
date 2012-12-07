@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  7 DEC 2012 15:31
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  7 DEC 2012 17:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -587,32 +587,54 @@ File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 32.
+
+
+LaTeX Warning: Reference `sec:conclusions' on page 1 undefined on input line 45
+.
+
+
+Underfull \vbox (badness 2318) has occurred while \output is active []
+
  [1
 
-{/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
-<reddit.pdf, id=22, 614.295pt x 794.97pt>
+{/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+! Undefined control sequence.
+l.59 ...nd attempt to align them with trends \dash
+                                                   entire topics that are be...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+LaTeX Warning: Citation `contagion' on page 2 undefined on input line 62.
+
+[2] [3] <reddit.pdf, id=25, 614.295pt x 794.97pt>
 File: reddit.pdf Graphic file (type pdf)
  <use reddit.pdf>
-Package pdftex.def Info: reddit.pdf used on input line 121.
+Package pdftex.def Info: reddit.pdf used on input line 127.
 (pdftex.def)             Requested size: 397.48499pt x 514.39537pt.
- [3]
+
 <stackexchange.pdf, id=26, 614.295pt x 794.97pt>
 File: stackexchange.pdf Graphic file (type pdf)
  <use stackexchange.pdf>
-Package pdftex.def Info: stackexchange.pdf used on input line 133.
+Package pdftex.def Info: stackexchange.pdf used on input line 139.
 (pdftex.def)             Requested size: 397.48499pt x 514.39537pt.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 4686) has occurred while \output is active []
 
- [4 <./reddit.pdf>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+ [4]
+[5 <./reddit.pdf>]
+Overfull \vbox (98.4659pt too high) has occurred while \output is active []
 
- [5 <./stackexchange.pdf>] [6]
+
+[6 <./stackexchange.pdf>]
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no œ in font ptmr7t!
 
-Underfull \hbox (badness 10000) in paragraph at lines 212--215
+Underfull \hbox (badness 10000) in paragraph at lines 219--222
 
  []
 
@@ -627,29 +649,33 @@ LaTeX Font Info:    Font shape `OMS/ptm/m/it' in size <10> not available
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 45.
 ) [8]
-(./report.aux) ) 
+(./report.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 11919 strings out of 493488
- 231985 string characters out of 3141326
- 283495 words of memory out of 3000000
- 14945 multiletter control sequences out of 15000+200000
+ 11923 strings out of 493488
+ 232050 string characters out of 3141326
+ 282509 words of memory out of 3000000
+ 14949 multiletter control sequences out of 15000+200000
  24445 words of font info for 58 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
  49i,14n,68p,881b,772s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/base/8r.enc
-}</usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
-</usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
-/usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></u
-sr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr
-/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/lo
-cal/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loc
-al/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local
-/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/l
-ocal/texlive/2012/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/tex
-live/2012/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2012/
-texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2012/texmf-dist
-/fonts/type1/urw/times/utmri8a.pfb>
-Output written on report.pdf (8 pages, 2337429 bytes).
+{/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
+exlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/te
+xlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/tex
+live/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texli
+ve/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive
+/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/20
+12/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/201
+2/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2012/
+texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2
+012/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2012/texm
+f-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2012/texmf-dist/fon
+ts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/u
+rw/times/utmri8a.pfb>
+Output written on report.pdf (8 pages, 2338482 bytes).
 PDF statistics:
  117 PDF objects out of 1000 (max. 8388607)
  86 compressed objects within 1 object stream
