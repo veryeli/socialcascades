@@ -5,8 +5,10 @@ def transform_to_netinf(fname):
 	f = open(fname+'.netinf', 'w')
 	for sample in get_samples(fname):
 		numvars= sample.shape[1]
+
 	for i in range(numvars):
 		f.write("%s,%s\n" %(i,i))
+		
 	for sample in get_samples(fname):
 		numvars= sample.shape[1]
 		netinf = {}

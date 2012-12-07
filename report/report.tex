@@ -44,7 +44,9 @@ Our work is an extension of the work in \cite{netinf}, in which the authors lear
 
 In this paper, we explore how modeling this mechanism as a timeseries can help us both to predict future topics and to discover the structure of latent communities. . Section \ref{data} explains the structure of the data and the domains from which they are drawn. Section \ref{cascades} delves into past work on cascades in networks. Sections \ref{experiments} and \ref{results} explain the experiments and results respectively, and Section \ref{discussion} explores the broader implications of our results and some future work. 
 
-\section{Social Cascades}
+\section{Background}
+
+\subsection{Social Cascades}
 \label{cascades}
 
 In \cite{info_contag} the authors use the explicit struture of networks - observing following and friendship relationships in order to explore the effect of actual, instead of inferred, network structure on information cascades. They observe that the popularity of stories peaks with an age of about one day, and then subsides. 
@@ -53,9 +55,32 @@ A unique aspect of open networks like reddit, digg, publications, \&c is that it
 
 In \cite{twitter_trend}, the authors identify \textit{bursty} keywords that suddently appear, and attempt to align them with trends - entire topics that are becoming more popular. They do this by analyzing new bursts in the queue. One thing we can do in this paper is look at each sub as a queue and see if bursts in one are followed by bursts in another.
 
-% OUR STORY; Learning social networks is important. Past att
-\subsection{Problem Statement}
+\subsection{Structure Learning}
 
+As internet domains are fully connected, and inference over fully connected graphs is intractable, it is important to 
+% OUR STORY; Learning social networks is important. Past att
+\section{Learning Structure}
+
+\subsection{Structure Learning}
+\subsection{Problem Structure}
+
+\subsection{Inference Problem}
+
+\subsection{Datasets}
+
+\subsubsection{Reddit}
+\subsubsection{StackExchange}
+\subsubsection{SomethingAwful}
+
+\subsection{Experiments}
+\label{experiments}
+
+\subsection{Results}
+\label{results}
+
+\section{Predicting Cascades}
+
+\subsection{Problem statement}
 Given nodes $\mathcal{D}$ with overlapping connections $\mathcal{C}$ via shared users, predict topic vector $v_{d,t+1}$ in document collection $d$ at time $t+1$ given the topics $V$ in all documents at time $t$?
 
 
@@ -119,47 +144,41 @@ Given that we have learned our parameters $\theta_s$ and $\theta_st$, and that w
 This optimization over $2^n$ possible assignments with $n$ equal to the number of sites under examination is NP-complete.\\
 Good approximations are found by searching the parameter space. 
 
-\section{Datasets}
+
+\subsection{Datasets}
 \label{data}
 
 Our algorithm is evaluated on three datasets.
-\begin{description}
-  \item[MemeTracker] A collection of popular newssites during the campaign season of 2008. Sites are blogs and major media sources. Memes detected via the Memetracker algorithm \cite{memetracker} are designated infections.
-  \item[StackExchange] There are 28 different sites on StackExchange. Pointwise Mutual Information \cite{pmi} identifies salient bigrams. Common bigrams detected by PMI that occur in bursts are infections.
-  \item[Synthetic] Infections are randomly initialized and spread through sampling via MCMC from generated parameters.
-\end{description}
+
 Our algorithm is evaluated on three datasets: a reddit dataset scraped from reddit.com, a stack-exchange dataset, and a synthetic dataset.
 
-\subsection{Reddit}
-Reddit is divided into thousands of \textit{subreddits}, each of which is targeted towards specialty interests. There is a many-to-many relationship between users and subreddits, with most users active in many subreddits and most subreddits populated with many users.
+\subsubsection{Memetracker}
 
-We looked at the top 20 subreddits in terms of popularity, and as these are so active, we set our timestep to be six hours. For each timestep, we formed a document of all of the post titles present during that time. A contagion was defined as described in \ref{infections}.
+A collection of popular newssites during the campaign season of 2008. Sites are blogs and major media sources. Memes detected via the Memetracker algorithm \cite{memetracker} are designated infections.
 
+\subsubsection{SomethingAwful}
+ There are 28 different sites on StackExchange. Pointwise Mutual Information \cite{pmi} identifies salient bigrams. Common bigrams detected by PMI that occur in bursts are infections.
+\subsubsection{Synthetic Dataset}
+Infections are randomly initialized and spread through sampling via MCMC from generated parameters.
 
-\subsection{StackExchange}
-
-\subsection{Synthetic Dataset}
-
-
-% Figure showing some structure of connections between reddits
-
-% Figure showing some structure of connections between conferences
-
-\section{Experiments}
+\subsection{Experiments}
 \label{experiments}
 
 We conducted three sets of experiements, on the \texttt{reddit} dataset, the \texttt{StackExchange} dataset, and the synthetic dataset. Each of these was similar, in that we used $n$-fold cross-validation to predict cascades with our algorithm, and with the edge weights learned by NetInf.
 
-\section{Results}
+\subsection{Results}
 \label{results}
 
 % predicted prevalence of phrase based on network vs based on entire thing
 
 % predicted network structure given phrases
 
-\section{Discussion}
+\section{Discussion and Future Work}
 \label{discussion}
 
+One of the major difficulties of researching infections if 
+
+Important future work 
 
 \bibliography{sources}{}
 \label{refs}
