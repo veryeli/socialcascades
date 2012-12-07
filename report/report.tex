@@ -110,7 +110,7 @@ $$
 
 Queries to our dynamic graph will always be performed with the nodes in $\mathcal{G}$ being observed, thus connecting them would not affect the MAP inference for nodes in $\mathcal{G'}$. One important point is that while the weights inferred by our algorithm could represent final weights in a graphical model, it is not clear that doing so would produce high accuracy.
 
-\subsection{Datasets}
+\subsection{Experiments}
 To validate our approach, we mined active user adjacency matrices for three real-world collaborative sites: \textit{reddit}, \textit{StackExchange}, and \textit{SomethingAwful}. The results for each site are presented next.
 
 \subsubsection{reddit}
@@ -118,18 +118,27 @@ To validate our approach, we mined active user adjacency matrices for three real
 
 Two interesting properties of the graph immediately stand out. First, the explicit-content subreddits, \textit{nsfw}, \textit{sex}, and \textit{gonewild}, are clustered together, indicating that memes on these subreddits are not likely to spread to the rest of the network and memes within the cluster will quickly infect the remaining nodes. Conversely, the marijuana-oriented subreddit, \textit{trees}, is a super-node that appears to exert influence on nearly every node and vice-versa. Intuitively, we may thus hypothesize that the users of \textit{trees} are very influential on reddit and would thus expect to see memes spread from and to \textit{trees} rapidly.
 
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\textwidth]{reddit.pdf}
+\caption{Graph inferred from the top 25 non-default subreddits.}
+\label{fig:reddit}
+\end{figure}
+
 \subsubsection{StackExchange}
 \textit{StackExchange} (SE) is a collaborative question-answer site where each subsite represents a different question topic. A majority of subsites focus on technical topics such as \textit{android} and \textit{security}, though non-technical subsites exist (e.g., \textit{cooking}). Memes in SE are more likely to take the form of rising topics of interest, such as the popularity of iPhone games or Ruby on Rails, rather than cultural topics like on reddit. Unlike most collaborative sites, SE user subscription data is publicly available. We therefore used the adjacency matrix of all users to build our graph. The resulting graph for SE is shown in Figure \ref{fig:stackexchange}.
 
 Perhaps counter-intuitively, the \textit{stackoverflow} subsite has two orders of magnitude more overall users than other sites, but exerts no influence on the network. This may be a result of the other subsites being relatively unknown but having a strong sub-culture of shared users. Two high-influence pseudo-clusters appear between less technical and strictly technical sites in the upper-left and lower-right, respectively. Thus, we would expect that localized memes would be frequent among these pseudo-clusters.
 
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\textwidth]{stackexchange.pdf}
+\caption{Graph inferred from the 28 StackExchange subsites.}
+\label{fig:reddit}
+\end{figure}
+
 \subsubsection{SomethingAwful}
 
-\subsection{Experiments}
-\label{experiments}
-
-\subsection{Results}
-\label{results}
 
 \section{Predicting Cascades}
 
@@ -181,7 +190,7 @@ $$\begin{tikzpicture}[-,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
 \end{tikzpicture}
 $$
 
-The number of nodes $|V|=2|S|$, with $S$ being the set of all sites. The number of edges $|E=\frac{3}{2}|S|^2$
+The number of nodes $|V|=2|S|$, with $S$ being the set of all sites. The number of edges $|E|=\frac{3}{2}|S|^2$
 
 \subsection{Detecting Infections}
 \label{infections}
