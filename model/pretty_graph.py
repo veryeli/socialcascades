@@ -36,60 +36,60 @@ def graph_matrix(m, names):
 					out.write("%s -- %s [color=\"%s\"];\n" %(names[i], names[j], color))
 	out.write('}')
 
-def graph_adj_matrix(m, names):
-	names = [name[3:-1] for name in names]
-	out = open('reddit.gv', 'w')
+def graph_adj_matrix(m, names, outfile):
+	out = open(outfile, 'wb')
 	out.write("graph \"G\" {\nratio=1\n")
 	
 	s = m.shape[0]
+	print s
 	counts = []
-	for i in range(0,s):
+	print 'm[0][0]: {0}'.format(m[0][0])
+	for i in range(s):
 		counts.append(m[i][i])
-	for i in range(0,s):
-		for j in range(0,s):
-			m[i][j] = m[i][j] / min(counts[i], counts[j])
+	for i in range(s):
+		for j in range(s):
+			if m[i][j] == 0 or counts[i] == 0 or counts[j] == 0:
+				m[i][j] = 0
+			else:
+				m[i][j] = m[i][j] / min(counts[i], counts[j])
 	stdev = np.std(m)
 	mean = np.mean(m)
 	
 
-	vals = []
-	for i in range(s):
-		if '4' in names[i]:
-			if names[i] == '4chan':
-				names[i]='fourchan'
-				vals.append(i)
-			else:
-				pass
-		#elif names[i] in ['pics', 'gaming', 'worldnews', 'videos', 'todayilearned', 'IAmA', 'funny', 'atheism', 'politics', 'science', 'AskReddit', 'technology', 'WTF', 'blog','announcements', 'bestof', 'AdviceAnimals', 'Music', 'aww', 'askscience', 'movies']:
-		#	pass
-		elif sum(m[i]) < 28:
-			print names[i] + ' is small'
-		else:
-			vals.append(i)
+	# vals = []
+	# for i in range(s):
+	# 	if '4' in names[i]:
+	# 		if names[i] == '4chan':
+	# 			names[i]='fourchan'
+	# 			vals.append(i)
+	# 		else:
+	# 			pass
+	# 	#elif names[i] in ['pics', 'gaming', 'worldnews', 'videos', 'todayilearned', 'IAmA', 'funny', 'atheism', 'politics', 'science', 'AskReddit', 'technology', 'WTF', 'blog','announcements', 'bestof', 'AdviceAnimals', 'Music', 'aww', 'askscience', 'movies']:
+	# 	#	pass
+	# 	elif sum(m[i]) < 28:
+	# 		print names[i] + ' is small'
+	# 	else:
+	# 		vals.append(i)
 
 	#print 'Stdev: {0} Mean: {1}'.format(stdev, mean)
-	for i in vals:
+	for i in names:
 		#out.write("%d [pos=\"%d,%d!\"	];\n" % (i,i,i))
 		out.write('{0};\n'.format(names[i]))
 	out.write('\n')
-	print len(vals)
-	for k in range(len(vals)):	
-		for l in range(k+1, len(vals)):
-			i = vals[k]
-			j = vals[l]
+	
+	for i in range(s):	
+		for j in range(i+1, s):
 			magnitude = m[i][j]
 			if magnitude < 0:
 				pass
 			else:
-				# magnitude = min(math.log(magnitude) - 7, 15)
-				# magnitude = int(round(magnitude)) * 2
 				magnitude -= mean
 				magnitude = magnitude / stdev
 
 				magnitude = int(round(min(15,max(0,magnitude))))
 				#magnitude = min(int(magnitude) - 5, 15)
 				print magnitude
-				if magnitude < 5:
+				if magnitude < 1:
 					magnitude = 0
 				#print magnitude
 				color=""
