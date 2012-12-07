@@ -5,9 +5,12 @@ def transform_to_netinf(fname):
 	f = open(fname.replace('.csv','.netinf'), 'wb')
 	for sample in get_samples(fname):
 		numvars= sample.shape[1]
+
 	for i in range(numvars):
 		f.write("%s,%s\n" %(i,i))
+
 	total = 0
+
 	for sample in get_samples(fname):
 		numvars= sample.shape[1]
 		netinf = {}
