@@ -35,7 +35,7 @@ In recent years, the attention paid to cascading information in social networks 
 
 \section{Introduction}
 \label{intro}
-Social cascades capture the concept of new ideas, or \textit{memes}, spreading across influence networks and infecting subcultures. Cascade theory has applications to several areas, including epidemiology, graph theory, machine learning, and marketing. In this paper, we examine the dynamics of information-spread across sub-communities with overlapping networks in several real-world domains: the social news site \textit{reddit}, a collection of blogs and mainstream media \cite{memetracker}, and the question-answer network \textit{StackExchange}. Our goal is to capture the flow of memes by learning a graphical model for each domain. In this paper, we present approaches for inferring both the structure and weights of such models. We also explore how modeling meme spreading as a timeseries can help us both to predict future topics and to discover the structure of latent communities.
+Social cascades capture the concept of new ideas, or \textit{memes}, spreading across influence networks and infecting subcultures. Cascade theory has applications to several areas, including epidemiology, graph theory, machine learning, and marketing. In this paper, we examine the dynamics of information-spread across sub-communities with overlapping networks in several real-world domains: the social news site \textit{reddit}, a collection of blogs and mainstream media \cite{memetracker}, the question-answer network \textit{StackExchange}, and the general interest forum \textit{Something Awful}. Our goal is to capture the flow of memes by learning a graphical model for each domain. In this paper, we present approaches for inferring both the structure and weights of such models. We also explore how modeling meme spreading as a timeseries can help us both to predict future topics and to discover the structure of latent communities.
 
 The remainder of this paper is organized as follows. Section \ref{sec:background} presents an overview of previous work on cascades. Section \ref{sec:structure} presents our algorithm for approximate structure learning in collaborative sites. Section \ref{sec:prediction} details the results of using graphical models to predict social cascades. Finally, section \ref{sec:conclusions} discusses potential future work and concludes.
 
@@ -56,12 +56,13 @@ Inferring networks of influence has been studied in a variety of contexts. Conta
 
 \section{Learning Structure}
 \label{sec:structure}
-In this section, we present our approach to learning the structure of influence graphs in collaborative sites. We first present an overview of the general problem, followed by our approach to learning structure, and finally validate our approach by learning structure graphs for two real-world datasets, \textit{reddit} and \textit{StackExchange}.
+In this section, we present our approach to learning the structure of influence graphs in collaborative sites. We first present an overview of the general problem, followed by our approach to learning structure, and finally validate our approach by learning structure graphs for three real-world datasets, \textit{reddit}, \textit{StackExchange}, and \textit{Something Awful}.
 
 \subsection{Challenges for Collaborative Sites}
 Learning graphical model structure is a particularly difficult task for collaborative sites. Each subsite forms a node in the network, and memes can potentially between any two subsites that share at least one user in common. Typically in social networks, we expect the percentage of mutual friends to be relatively low and edges exist simply as binary friend-or-not connections. However, in collaborative sites with thousands of users, it is reasonable to expect that every subsite shares at least one user in common. A naive approach would thus result in a fully connected graph, which is undesirable as it reveals little insight and may make certain tasks intractable.
 
 \subsection{Approximate Structure Learning Algorithm}
+\label{algorithm}
 Since it is possible for a meme to spread between any two subsites, any structure learning algorithm that yields a less-than-fully-connected graph is learning an approximate structure. As noted previously, an approximate structure may be desirable for gaining insights and reducing computational requirements. We next present our approximate structure learning algorithm for collaborative sites.
 
 We first begin by defining an \textit{adjency matrix}, $\mathcal{A}$, over subsites. For each pair, $(s,t) \in \mathcal{A}$, of subsites, we mine the percentage of \textit{active} users that overlap in both $s$ and $t$. We define a user as \textit{active} if they have posted at least once on both subsites\footnote{Note that mining inactive users would be infeasible since most collaborative sites have user subsite subscriptions as private.}:
@@ -148,20 +149,16 @@ The SA graph reveals the important role of the main comedy subsite, \textit{Come
 \section{Predicting Cascades}
 \label{sec:prediction}
 
-The second task is a difficult inference problem, detecting cascades in networks of sites. This task has two components - learning the connections between the sites and using the strengths of these connections to predict the sites of future infections. In \cite{netinf}, the authors learn the strength of connections between sites to visualize and explore the data, while we extend this research by using connections to predict future data.
+Given a graph structure, we are faced with a difficult inference problem: detecting cascades in networks of subsites. We leverage the exponential family techniques from \cite{wainwright} to learn a parameterized model. In contrast to NetInf \cite{netinf}, where the strength of connections between sites is used merely to visualize and explore the data, we learn a valid probability distribution over nodes that can predict future data. We validate our approach on the Meme Tracker \cite{memetracker} dataset. Due to the time constraints of the project, we were unable to gather sufficient data from reddit, SE, or SA; these sites are left as future work.
 
 
 \subsection{Problem statement}
-Given nodes $\mathcal{D}$ with overlapping connections $\mathcal{C}$ via shared users, predict topic vector $v_{d,t+1}$ in document collection $d$ at time $t+1$ given the topics $V$ in all documents at time $t$?
-
-
-Following the model in \cite{influential}, we refer to a node as \textit{contagious} for a given phrase if it has had that phrase trend internally within the last timestep. A node that contains a previously trending phrase can be viewed as having become \textit{infected.} 
-
-Given sites $\mathcal{D}$ with overlapping connections $\mathcal{C}$ via shared users, predict topic vector $v_{d,t+1}$ in site $d$ at time $t+1$ given the topics $V$ in all documents at time $t$.
+Given a graphical model, $\mathcal{G} = (\mathcal{V}, \mathcal{E})$, created as specified in Section \ref{algorithm}. 
+Given nodes, $\mathcal{V}$, with overlapping connections, $\mathcal{C}$, via shared users, predict topic vector $v_{d,t+1}$ in document collection $d$ at time $t+1$ given the topic  topics $V$ in all documents at time $t$.
 
 Following the model in \cite{influential}, we refer to a node as \textit{contagious} for a given phrase if it has had that phrase trend internally within the last timestep. A node that contains a previously trending phrase can be viewed as having become \textit{infected.} 
 
-We model this domain as an unfolding Markov Chain, in which at each timestep, nodes become infected or uninfected. See the below graph, in which nodes $\{A,B,C\}$ represent the states of three sites at time $t$, and the nodes $\{A',B',C'\}$ represent the same nodes at time $t+1$.
+We model this domain as an unfolding Markov Chain, in which at each timestep, nodes may become infected. See the below graph, in which nodes $\{A,B,C\}$ represent the states of three sites at time $t$, and the nodes $\{A',B',C'\}$ represent the same nodes at time $t+1$.
 
 \subsection{Problem Structure}
 
