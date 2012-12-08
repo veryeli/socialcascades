@@ -1,4 +1,4 @@
-PWD /Users/eliana/Projects/redditcascade/report
+PWD /Users/wesley/Projects/pgm/socialcascades/report
 INPUT /usr/local/texlive/2012/texmf.cnf
 INPUT /usr/local/texlive/2012/texmf/web2c/texmf.cnf
 INPUT /usr/local/texlive/2012/texmf-var/web2c/pdftex/pdflatex.fmt
@@ -232,11 +232,14 @@ INPUT ./reddit.pdf
 INPUT stackexchange.pdf
 INPUT ./stackexchange.pdf
 INPUT ./stackexchange.pdf
+INPUT somethingawful.pdf
+INPUT ./somethingawful.pdf
+INPUT ./somethingawful.pdf
 INPUT /usr/local/texlive/2012/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm
+INPUT report.bbl
+INPUT report.bbl
 INPUT /usr/local/texlive/2012/texmf-dist/fonts/vf/adobe/courier/pcrr7t.vf
 INPUT /usr/local/texlive/2012/texmf-dist/fonts/tfm/adobe/courier/pcrr8r.tfm
-INPUT report.bbl
-INPUT report.bbl
 INPUT /usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/omsptm.fd
 INPUT /usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/omsptm.fd
 INPUT report.aux

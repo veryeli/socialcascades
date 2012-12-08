@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex report"] 1354922112 "report.aux" "report.bbl" "report" 1354922113
+["bibtex report"] 1354932152 "report.aux" "report.bbl" "report" 1354932154
   "/usr/local/texlive/2012/texmf-dist/bibtex/bst/base/plain.bst" 1292289607 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "report.aux" 1354922113 917 f7d2ad47922ac3fac23cfadcdbb686d9 ""
+  "report.aux" 1354932153 1127 e690b42b297eeec8452efc3434980191 ""
   "report.bcf" 0 -1 0 ""
-  "sources.bib" 1354921182 3859 4429beae9785a3f86d1310db55329c29 ""
+  "sources.bib" 1354931603 5089 3086f4f54b0e0c61673932759a830625 ""
   (generated)
   "report.bbl"
   "report.blg"
-["pdflatex"] 1354922112 "report.tex" "report.pdf" "report" 1354922113
+["pdflatex"] 1354932152 "report.tex" "report.pdf" "report" 1354932154
   "/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2012/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2012/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -156,12 +156,13 @@
   "/usr/local/texlive/2012/texmf-var/web2c/pdftex/pdflatex.fmt" 1341108725 3691572 80746d7cec090b0770bc87079bef471d ""
   "/usr/local/texlive/2012/texmf.cnf" 1341108668 572 7ea7194897937febeb63145e1c3a1f03 ""
   "/usr/local/texlive/2012/texmf/web2c/texmf.cnf" 1336865692 31299 729e216d9b945005c0d4b079c0500bc9 ""
-  "nips12submit_e.sty" 1354489819 7885 9e4f4f244c224b3cef8e31ef2149d2e0 ""
-  "reddit.pdf" 1354914313 1066057 2b1e3f7f0891809fd20b991fb5ef1680 ""
-  "report.aux" 1354922113 917 f7d2ad47922ac3fac23cfadcdbb686d9 ""
-  "report.bbl" 1354922112 1793 3ea3a4e7fa2d170c467eaefdbaf4efa5 "bibtex report"
-  "report.tex" 1354922031 21428 11c8ddc77c586751595ca521e942cccf ""
-  "stackexchange.pdf" 1354914313 1123276 a2c8f0b1bb87228cb83436907ce713d8 ""
+  "nips12submit_e.sty" 1354515376 7885 9e4f4f244c224b3cef8e31ef2149d2e0 ""
+  "reddit.pdf" 1354541640 1066057 2b1e3f7f0891809fd20b991fb5ef1680 ""
+  "report.aux" 1354932153 1127 e690b42b297eeec8452efc3434980191 ""
+  "report.bbl" 1354932152 2712 7cef9ea5bb8482c78a9a3ff8ecc9f796 "bibtex report"
+  "report.tex" 1354932139 22774 6c9d1f28b75662a960031503030af4e6 ""
+  "somethingawful.pdf" 1354931044 4807816 6d9d81aaf82c68c5183b95a17cd1dcc1 ""
+  "stackexchange.pdf" 1354541709 1123276 a2c8f0b1bb87228cb83436907ce713d8 ""
   (generated)
   "report.aux"
   "report.pdf"

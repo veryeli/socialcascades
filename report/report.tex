@@ -35,12 +35,7 @@ In recent years, the attention paid to cascading information in social networks 
 
 \section{Introduction}
 \label{intro}
-Social cascades capture the concept of new ideas, or \textit{memes}, spreading across influence networks and infecting subcultures. Cascade theory has applications to several areas, including epidemiology, graph theory, machine learning, and marketing. In this paper, we examine the dynamics of information-spread across sub-communities with overlapping networks in several real-world domains: the social news site \textit{reddit}, a collection of blogs and mainstream media \cite{memetracker}, and the question-answer network \textit{StackExchange}. Our goal is to capture the flow of memes by learning a graphical model for each domain. We present approaches for inferring both the structure and weights of such models.
-
-Information online travels across networks in a variety of configurations, and it is easy to see information spreading across them. 
-Our work is an extension of the NetInf work \cite{netinf}, in which the authors learn the structure of a graph from observing cascades. Where as the NetInf 
-
-In this paper, we explore how modeling this mechanism as a timeseries can help us both to predict future topics and to discover the structure of latent communities.
+Social cascades capture the concept of new ideas, or \textit{memes}, spreading across influence networks and infecting subcultures. Cascade theory has applications to several areas, including epidemiology, graph theory, machine learning, and marketing. In this paper, we examine the dynamics of information-spread across sub-communities with overlapping networks in several real-world domains: the social news site \textit{reddit}, a collection of blogs and mainstream media \cite{memetracker}, and the question-answer network \textit{StackExchange}. Our goal is to capture the flow of memes by learning a graphical model for each domain. In this paper, we present approaches for inferring both the structure and weights of such models. We also explore how modeling meme spreading as a timeseries can help us both to predict future topics and to discover the structure of latent communities.
 
 The remainder of this paper is organized as follows. Section \ref{sec:background} presents an overview of previous work on cascades. Section \ref{sec:structure} presents our algorithm for approximate structure learning in collaborative sites. Section \ref{sec:prediction} details the results of using graphical models to predict social cascades. Finally, section \ref{sec:conclusions} discusses potential future work and concludes.
 
@@ -54,14 +49,11 @@ A \textit{collaborative site}, in this paper, is defined as any site which has a
 \subsection{Social Cascades}
 In \cite{info_contag} the authors use the explicit struture of networks - observing following and friendship relationships in order to explore the effect of actual, instead of inferred, network structure on information cascades. They observe that the popularity of stories peaks with an age of about one day, and then subsides. 
 
-A unique aspect of open networks like reddit\footnote{http://reddit.com} and digg\footnote{http://digg.com} is that it is possible for information to latently travel quickly, as opposed to in closed, action oriented networks like the one described in \cite{viral_dynamics}, where information, which must individually be spread from one email to another, peters out quickly.
-
-In \cite{twitter_trend}, the authors identify \textit{``bursty''} keywords that suddently appear, and attempt to align them with trends \dash entire topics that are becoming more popular. In collaborative sites, however, we are interested in both the rise of such topics and the path they travel through the network of subsites.
+A unique aspect of open networks like reddit\footnote{http://reddit.com} and digg\footnote{http://digg.com} is that it is possible for information to latently travel quickly, as opposed to in closed, action oriented networks like the one described in \cite{viral_dynamics}, where information, which must individually be spread from one email to another, peters out quickly. In \cite{twitter_trend}, the authors identify \textit{``bursty''} keywords that suddently appear, and attempt to align them with trends -- entire topics that are becoming more popular. In collaborative sites, however, we are interested in both the rise of such topics and the path they travel through the network of subsites.
 
 \subsection{Structure Learning}
-Inferring networks of influence has been studied in a variety of contexts. Contagion networks have been used \cite{contagion} to model the spread of disease throughout a social network. 
-As internet domains are fully connected, and inference over fully connected graphs is intractable, it is important to 
-% OUR STORY; Learning social networks is important. Past att
+Inferring networks of influence has been studied in a variety of contexts. Contagion networks have been used \cite{contagion} to model the spread of disease throughout a social network. In marketing, contagion networks have been leveraged to identify how products and ad campaigns reach critical mass virally (``go viral'') \cite{marketing1, marketing2}. In the more general context, NetInf \cite{netinf} was developed to infer directed network structure from a list of meme ``infections'' in a given network. While all of these approaches are powerful techniques, none quite fit the requirements of collaborative site network inference. Namely, the need to filter a fully-connected, undirected graph down to only the most influential connections in a manner amenable for probabilistic graphical inference as an exponential family.
+
 \section{Learning Structure}
 \label{sec:structure}
 In this section, we present our approach to learning the structure of influence graphs in collaborative sites. We first present an overview of the general problem, followed by our approach to learning structure, and finally validate our approach by learning structure graphs for two real-world datasets, \textit{reddit} and \textit{StackExchange}.
@@ -86,11 +78,11 @@ Rather than focusing on binary co-occurrence edges, our algorithm assesses the s
 
 $$
 \begin{array}{lll}
-\mathcal{A}^*[s,t] &=& \dfrac{\mathcal{A}[s,t] - \mu(\mathcal{A})}{\sigma(\mathcal{A})}\\
+\mathcal{A}^*[s,t] &=& \dfrac{\mathcal{A}[s,t] - \mu(\mathcal{A})}{\alpha\sigma(\mathcal{A})}\\
 \end{array}
 $$
 
-Where $\mu$ and $\sigma$ are the mean and standard deviation, respectively. Finally, we define the weighted edge matrix, $\mathcal{E}$:
+Where $\mu$ and $\sigma$ are the mean and standard deviation, respectively, and $\alpha$ is a tuning parameter. Finally, we define the weighted edge matrix, $\mathcal{E}$:
 
 $$
 \begin{array}{lll}
@@ -118,7 +110,7 @@ Queries to our dynamic graph will always be performed with the nodes in $\mathca
 To validate our approach, we mined active user adjacency matrices for three real-world collaborative sites: \textit{reddit}, \textit{StackExchange}, and \textit{SomethingAwful}. The results for each site are presented next.
 
 \subsubsection{reddit}
-\textit{reddit} is a social news site where each subsite\footnote{reddit subsites are called subreddits.} represents a different news topic. By default, all users are subscribed to a generic set of subsites such as \textit{politics} and \textit{humor}. The overlap among these default subsites is very high resulting in very little signal in the adjacency matrix; it is also worth noting that these subsites are more likely to be the final destination of memes, given that they are less niche than the non-default subsites. Consequently, we first removed all default subsites from our dataset. To conform to our time constraints and maximize the amount of insight we could draw, we then limited the remaining non-default subsites to only the top 25. The resulting graph generated by our structure learning algorithm is shown in Figure \ref{fig:reddit}.
+\textit{reddit}\footnote{http://reddit.com} is a social news site where each subsite\footnote{reddit subsites are called subreddits.} represents a different news topic. By default, all users are subscribed to a generic set of subsites such as \textit{politics} and \textit{humor}. The overlap among these default subsites is very high resulting in very little signal in the adjacency matrix; it is also worth noting that these subsites are more likely to be the final destination of memes, given that they are less niche than the non-default subsites. Consequently, we first removed all default subsites from our dataset. To conform to our time constraints and maximize the amount of insight we could draw, we then limited the remaining non-default subsites to only the top 25. The resulting graph generated by our structure learning algorithm is shown in Figure \ref{fig:reddit}.
 
 Two interesting properties of the graph immediately stand out. First, the explicit-content subreddits, \textit{nsfw}, \textit{sex}, and \textit{gonewild}, are clustered together, indicating that memes on these subreddits are not likely to spread to the rest of the network and memes within the cluster will quickly infect the remaining nodes. Conversely, the marijuana-oriented subreddit, \textit{trees}, is a super-node that appears to exert influence on nearly every node and vice-versa. Intuitively, we may thus hypothesize that the users of \textit{trees} are very influential on reddit and would thus expect to see memes spread from and to \textit{trees} rapidly.
 
@@ -130,7 +122,7 @@ Two interesting properties of the graph immediately stand out. First, the explic
 \end{figure}
 
 \subsubsection{StackExchange}
-\textit{StackExchange} (SE) is a collaborative question-answer site where each subsite represents a different question topic. A majority of subsites focus on technical topics such as \textit{android} and \textit{security}, though non-technical subsites exist (e.g., \textit{cooking}). Memes in SE are more likely to take the form of rising topics of interest, such as the popularity of iPhone games or Ruby on Rails, rather than cultural topics like on reddit. Unlike most collaborative sites, SE user subscription data is publicly available. We therefore used the adjacency matrix of all users to build our graph. The resulting graph for SE is shown in Figure \ref{fig:stackexchange}.
+\textit{StackExchange}\footnote{http://stackexchange.com} (SE) is a collaborative question-answer site where each subsite represents a different question topic. A majority of subsites focus on technical topics such as \textit{android} and \textit{security}, though non-technical subsites exist (e.g., \textit{cooking}). Memes in SE are more likely to take the form of rising topics of interest, such as the popularity of iPhone games or Ruby on Rails, rather than cultural topics like on reddit. Unlike most collaborative sites, SE user subscription data is publicly available. We therefore used the adjacency matrix of all users to build our graph. The resulting graph for SE is shown in Figure \ref{fig:stackexchange}.
 
 Perhaps counter-intuitively, the \textit{stackoverflow} subsite has two orders of magnitude more overall users than other sites, but exerts no influence on the network. This may be a result of the other subsites being relatively unknown but having a strong sub-culture of shared users. Two high-influence pseudo-clusters appear between less technical and strictly technical sites in the upper-left and lower-right, respectively. Thus, we would expect that localized memes would be frequent among these pseudo-clusters.
 
@@ -141,8 +133,17 @@ Perhaps counter-intuitively, the \textit{stackoverflow} subsite has two orders o
 \label{fig:stackexchange}
 \end{figure}
 
-\subsubsection{SomethingAwful}
+\subsubsection{Something Awful}
+\textit{Something Awful}\footnote{http://forums.somethingawful.com} (SA) is a general interest internet forum consisting of 53 subsites, where each subsite is a forum devoted to a separate topic such as games or books. SA is often regarded as a progenitor of memes, such as the infamous ``All your base are belong to us'' meme \cite{allyourbase}. The graph inferred from SA is shown in Figure \ref{fig:somethingawful}.
 
+The SA graph reveals the important role of the main comedy subsite, \textit{Comedy Goldmine}. By contrast, the niche-specific subsites for music, football, and automobiles form clusters among their topics and exert virtually no influence on the broader site. Thus, intuitively, we would expect memes on Something Awful to originate from the comedy subsites and quickly spread to other general interest sites, but have little affect on niche subsites.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\textwidth]{somethingawful.pdf}
+\caption{Graph inferred from the 53 Something Awful subsites.}
+\label{fig:somethingawful}
+\end{figure}
 
 \section{Predicting Cascades}
 \label{sec:prediction}
@@ -257,7 +258,7 @@ Accuracy in these experiments is denoted by the percentage of nodes correctly pr
 % predicted network structure given phrases
 
 \section{Discussion and Future Work}
-\label{discussion}
+\label{sec:conclusions}
 
 One of the major difficulties of researching infections in social networks is the sparsity questions. If a site is only infected when a meme is present, the graph is very sparse, and phenomena like a user absorbing content at time $t-1$ and then reproducing it on another site at time $t+1$ are difficut or impossible to model. However, if a site becomes infected with the first occurance of a meme and stays inected forever, information about when a meme is first flaring or when it hasn't been active in the last several timesteps is lost.
 

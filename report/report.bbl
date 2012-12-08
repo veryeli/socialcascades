@@ -1,15 +1,38 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{pmi}
 K.W. Church and P.~Hanks.
 \newblock Word association norms, mutual information, and lexicography.
 \newblock {\em Computational linguistics}, 16(1):22--29, 1990.
 
+\bibitem{marketing1}
+J.~Goldenberg, B.~Libai, and E.~Muller.
+\newblock Using complex systems analysis to advance marketing theory
+  development: Modeling heterogeneity effects on new product growth through
+  stochastic cellular automata.
+\newblock {\em Academy of Marketing Science Review}, 9(3):1--18, 2001.
+
 \bibitem{netinf}
 M.~Gomez-Rodriguez, J.~Leskovec, and A.~Krause.
 \newblock Inferring networks of diffusion and influence.
 \newblock {\em ACM Transactions on Knowledge Discovery from Data (TKDD)},
   5(4):21, 2012.
+
+\bibitem{contagion}
+A.L. Hill, D.G. Rand, M.A. Nowak, and N.A. Christakis.
+\newblock Infectious disease modeling of social contagion in networks.
+\newblock {\em PLoS computational biology}, 6(11):e1000968, 2010.
+
+\bibitem{allyourbase}
+Rich Johnston.
+\newblock All your base...
+\newblock {\em The Guardian}, February 2001.
+
+\bibitem{marketing2}
+D.~Kempe, J.~Kleinberg, and {\'E}.~Tardos.
+\newblock Maximizing the spread of influence through a social network.
+\newblock In {\em Proceedings of the ninth ACM SIGKDD international conference
+  on Knowledge discovery and data mining}, pages 137--146. ACM, 2003.
 
 \bibitem{influential}
 D.~Kempe, J.~Kleinberg, and {\'E}.~Tardos.
