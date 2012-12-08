@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex report"] 1354934537 "report.aux" "report.bbl" "report" 1354934539
+["bibtex report"] 1354945873 "report.aux" "report.bbl" "report" 1354945875
   "/usr/local/texlive/2012/texmf-dist/bibtex/bst/base/plain.bst" 1292289607 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "report.aux" 1354934538 1180 74baf0cc35ec437838afa58ade07b20f ""
+  "report.aux" 1354945874 1172 87b34d0628331a230ebc740414cae0b6 ""
   "report.bcf" 0 -1 0 ""
-  "sources.bib" 1354931603 5089 3086f4f54b0e0c61673932759a830625 ""
+  "sources.bib" 1354937188 5404 0cdd8f78a45fbd9792cd2614a308f6ea ""
   (generated)
   "report.bbl"
   "report.blg"
-["pdflatex"] 1354934537 "report.tex" "report.pdf" "report" 1354934539
+["pdflatex"] 1354945873 "report.tex" "report.pdf" "report" 1354945875
   "/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2012/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2012/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -158,9 +158,9 @@
   "/usr/local/texlive/2012/texmf/web2c/texmf.cnf" 1336865692 31299 729e216d9b945005c0d4b079c0500bc9 ""
   "nips12submit_e.sty" 1354515376 7885 9e4f4f244c224b3cef8e31ef2149d2e0 ""
   "reddit.pdf" 1354541640 1066057 2b1e3f7f0891809fd20b991fb5ef1680 ""
-  "report.aux" 1354934538 1180 74baf0cc35ec437838afa58ade07b20f ""
-  "report.bbl" 1354934537 2712 7cef9ea5bb8482c78a9a3ff8ecc9f796 "bibtex report"
-  "report.tex" 1354934093 22735 11403a75e8c808fcdc79f86a9161b175 ""
+  "report.aux" 1354945874 1172 87b34d0628331a230ebc740414cae0b6 ""
+  "report.bbl" 1354945873 3083 a51fd3413f9bb2daedad7784c5ae8e60 "bibtex report"
+  "report.tex" 1354945871 21993 8e787eef79f174bfeb3ace7b93f91ff1 ""
   "somethingawful.pdf" 1354931044 4807816 6d9d81aaf82c68c5183b95a17cd1dcc1 ""
   "stackexchange.pdf" 1354541709 1123276 a2c8f0b1bb87228cb83436907ce713d8 ""
   (generated)

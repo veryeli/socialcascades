@@ -1,9 +1,11 @@
 \begin{thebibliography}{10}
 
-\bibitem{pmi}
-K.W. Church and P.~Hanks.
-\newblock Word association norms, mutual information, and lexicography.
-\newblock {\em Computational linguistics}, 16(1):22--29, 1990.
+\bibitem{flickr}
+M.~Cha, A.~Mislove, and K.P. Gummadi.
+\newblock A measurement-driven analysis of information propagation in the
+  flickr social network.
+\newblock In {\em Proceedings of the 18th international conference on World
+  wide web}, pages 721--730. ACM, 2009.
 
 \bibitem{marketing1}
 J.~Goldenberg, B.~Libai, and E.~Muller.
@@ -61,6 +63,12 @@ Michael Mathioudakis and Nick Koudas.
 \newblock Twittermonitor: trend detection over the twitter stream.
 \newblock In Ahmed~K. Elmagarmid and Divyakant Agrawal, editors, {\em SIGMOD
   Conference}, pages 1155--1158. ACM, 2010.
+
+\bibitem{measuresocial}
+A.~Mislove, M.~Marcon, K.P. Gummadi, P.~Druschel, and B.~Bhattacharjee.
+\newblock Measurement and analysis of online social networks.
+\newblock In {\em Proceedings of the 7th ACM SIGCOMM conference on Internet
+  measurement}, pages 29--42. ACM, 2007.
 
 \bibitem{wainwright}
 M.J. Wainwright and M.I. Jordan.

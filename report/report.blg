@@ -6,45 +6,45 @@ Database file #1: sources.bib
 A bad cross reference---entry "twitter_trend"
 refers to entry "conf/sigmod/2010", which doesn't exist
 Warning--I didn't find a database entry for "conf/sigmod/2010"
-You've used 12 entries,
+You've used 13 entries,
             2118 wiz_defined-function locations,
-            577 strings with 6056 characters,
-and the built_in function-call counts, 4364 in all, are:
-= -- 441
-> -- 198
-< -- 4
-+ -- 77
-- -- 64
-* -- 301
-:= -- 714
-add.period$ -- 39
-call.type$ -- 12
-change.case$ -- 67
+            579 strings with 6348 characters,
+and the built_in function-call counts, 5067 in all, are:
+= -- 515
+> -- 231
+< -- 6
++ -- 91
+- -- 76
+* -- 343
+:= -- 810
+add.period$ -- 44
+call.type$ -- 13
+change.case$ -- 76
 chr.to.int$ -- 0
-cite$ -- 12
-duplicate$ -- 174
-empty$ -- 333
-format.name$ -- 64
-if$ -- 932
+cite$ -- 13
+duplicate$ -- 207
+empty$ -- 387
+format.name$ -- 76
+if$ -- 1100
 int.to.chr$ -- 0
-int.to.str$ -- 12
-missing$ -- 12
-newline$ -- 63
-num.names$ -- 26
-pop$ -- 61
+int.to.str$ -- 13
+missing$ -- 13
+newline$ -- 68
+num.names$ -- 28
+pop$ -- 78
 preamble$ -- 1
-purify$ -- 55
+purify$ -- 63
 quote$ -- 0
-skip$ -- 136
+skip$ -- 161
 stack$ -- 0
-substring$ -- 269
-swap$ -- 51
-text.length$ -- 4
+substring$ -- 312
+swap$ -- 70
+text.length$ -- 6
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 48
+type$ -- 52
 warning$ -- 0
-while$ -- 44
-width$ -- 14
-write$ -- 136
+while$ -- 50
+width$ -- 15
+write$ -- 149
 (There was 1 error message)
